@@ -247,7 +247,7 @@ void PrimaryGeneratorAction::GenerateSource(G4Event* anEvent)
 {
   LXSetUp *lxs = LXSetUp::Instance();
 
-  fz0 = -lxs->Sr90GapZ - lxs->CollimatorLeadZ -0.5*lxs->Collimator1Z;
+  fz0 = -lxs->Sr90GapZ - lxs->BTargetZ;
 
   G4double rphi = 2.0*M_PI*G4UniformRand();
   G4double sreffectiver = lxs->Sr90SourceR;    // lxs->CollimatorLeadHoleR;

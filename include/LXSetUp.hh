@@ -903,6 +903,21 @@ public:
   G4double CarrierPCBZ;
   G4double CarrierPCBCutX;
   G4double CarrierPCBCutY;
+  G4double ROPCBX;
+  G4double ROPCBY;
+  G4double ROPCBZ;
+  G4double CarrierROGap;
+
+  G4double TeleFrameX;
+  G4double TeleFrameY;
+  G4double TeleFrameZ;
+  G4double TeleFrameCutAlpideX;
+  G4double TeleFrameCutAlpideY;
+  G4double TeleFrameCutAlpideGapY;
+  G4double TeleFramePCBGap;
+  G4double TeleFramePCBShift;
+  G4double TeleFrameHolderY;
+
   std::vector<G4double> TelescopeSensorZpos;
 
   G4String TelescopeShieldingMaterial;
@@ -911,6 +926,18 @@ public:
   G4double TeleShieldingZ;
   G4double TeleShieldingThickess;
   G4double ShieldingGapY;
+
+  G4double FrameHolderX;
+  G4double FrameHolderY;
+  G4double FrameHolderZ;
+  G4double SupportPoleX;
+  G4double SupportPoleY;
+  G4double SupportPoleZ;
+  G4double SupportPoleThickness;
+
+  G4double ShieldingBoxBottomX;
+  G4double ShieldingBoxBottomY;
+  G4double ShieldingBoxBottomZ;
 
 };
 

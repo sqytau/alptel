@@ -908,7 +908,7 @@ LXSetUp::LXSetUp()
   WoodSupportZ = 18.0 *mm;
   TelescopeFloorZpos = WoodSupportZpos + WoodSupportZ + 45.0 *mm;
   FloorZ = 100.0 *mm;
-  FloorGapZ = 45.0 *mm;
+  FloorGapZ = 450.0 *mm;
 
   Collimator1X = 238.0*mm;
   Collimator1Y = 100.0*mm;
@@ -922,7 +922,7 @@ LXSetUp::LXSetUp()
 
   Sr90SourceR = 20.4/2.0 *mm;
   Sr90SourceZ = 1.0 *mm;
-  Sr90GapZ = 1.0 *mm;
+  Sr90GapZ = 13.0 *mm;
   SrAlPlugR = Sr90SourceR;
   SrAlPlugZ = 2.0 *mm;
   SrSupportRingRin = Sr90SourceR;
@@ -940,7 +940,24 @@ LXSetUp::LXSetUp()
   CarrierPCBZ = 1.5 *mm;
   CarrierPCBCutX = OPPPSensorX - 1.0*mm;
   CarrierPCBCutY = OPPPSensorY - 1.0*mm;
-  TelescopeSensorZpos = {45.0*mm, 87.0*mm, 129*mm};
+
+  ROPCBX = 100.0 *mm;
+  ROPCBY = 100.0 *mm;
+  ROPCBZ = 1.5 *mm;
+  CarrierROGap = 17.0 *mm;
+
+  TeleFrameX = 150.0 *mm;
+  TeleFrameY = 220.0 *mm;
+  TeleFrameZ = 8.0 *mm;
+  TeleFrameCutAlpideX = 50.0 *mm;
+  TeleFrameCutAlpideY = 50.0 *mm;
+  TeleFrameCutAlpideGapY = 15.5 *mm;
+  TeleFramePCBGap = 27.0 *mm;
+  TeleFramePCBShift = 6.0 *mm;
+  TeleFrameHolderY = 36.0 *mm;
+
+
+  TelescopeSensorZpos = {29.0*mm, (29.0+25.8)*mm, (29.0 + 2.0*25.8)*mm};
 
   TelescopeShieldingMaterial = "G4_Pb";
   TeleShieldingX = 360.0 *mm;
@@ -948,6 +965,18 @@ LXSetUp::LXSetUp()
   TeleShieldingZ = 180.0 *mm;
   TeleShieldingThickess = 50.0 *mm;
   ShieldingGapY = 70.0 *mm;
+
+  FrameHolderX = 52.0 *mm;
+  FrameHolderY = 20.0 *mm;
+  FrameHolderZ = 330.0 *mm;
+  SupportPoleX = 60.0 *mm;
+  SupportPoleY = 60.0 *mm;
+  SupportPoleZ = 1100.0 *mm;
+  SupportPoleThickness = 2.0 *mm;
+
+  ShieldingBoxBottomX = 350.0 *mm;
+  ShieldingBoxBottomY = 6.0 *mm;
+  ShieldingBoxBottomZ = 450.0 *mm;
 
 }
 

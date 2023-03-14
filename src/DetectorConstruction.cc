@@ -443,7 +443,7 @@ void DetectorConstruction::ComputeCalorParameters()
   fZendAbs   = fZposAbs+0.5*fAbsorberThickness;
 
   if (fDefaultWorld) {
-     fWorldSizeZ = 1.0*m;
+     fWorldSizeZ = 1.5*m;
      fWorldSizeXY= 1.5*m;
   }
 }
@@ -510,7 +510,8 @@ void DetectorConstruction::ConstructLuxeDetectors()
 //   fDetList["UG03"] = new LxUG03(this);
 //   fDetList["BSMDetector"] = new LxBSMDetector(this);
 
-  fDetList["WISDetectorTele"] = new WISDetectorTele(this);
+//   fDetList["WISDetectorTele"] = new WISDetectorTele(this);
+  fDetList["WISDetectorTeleFrame"] = new WISDetectorTeleFrame(this);
 
 //   fDetList["STLComponents"] = new STLConstruction(this);
 
@@ -528,7 +529,7 @@ void DetectorConstruction::ConstructLuxeDetectors()
                                  solidCollimator2a, solidColl2Hole, transform);
 
   G4LogicalVolume* logicCollimator2 = new G4LogicalVolume(solidCollimator2, fAbsorberMaterial, "logicCollimator2");
-  G4double collimator2Zpos = (lxs->Collimator1Z + lxs->BTargetZ)/2.0;
+  G4double collimator2Zpos = -lxs->BTargetZ/2.0;
   fPhysiAbsorber = new G4PVPlacement(0, G4ThreeVector(0.0, 0.0, collimator2Zpos), logicCollimator2, "Collimator2",
                                                                       fLogicWorld, false, 0, lxs->OverlapTest);
 

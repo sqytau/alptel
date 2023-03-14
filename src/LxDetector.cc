@@ -598,7 +598,9 @@ void WISDetectorTele::Construct()
 
   ConstructShielding(fLogicWorld);
   ConstructBottomSupport(fLogicWorld);
-  ConstructSr90Sourse(fLogicWorld);
+  G4LogicalVolume *logicSr90Container = ConstructSr90Sourse();
+  G4double sr90posz = -lxs->Sr90GapZ - lxs->CollimatorLeadZ -0.5*(lxs->Collimator1Z + lxs->SrSupportRingZ);
+  new G4PVPlacement (0, G4ThreeVector(0.0, 0.0, sr90posz), logicSr90Container, "Sr90SourceAssembly", fLogicWorld, false, 0, lxs->OverlapTest);
 
   AddSegmentation();
 
@@ -716,7 +718,7 @@ void WISDetectorTele::ConstructBottomSupport(G4LogicalVolume  *logicWorld)
 
 
 
-void WISDetectorTele::ConstructSr90Sourse(G4LogicalVolume  *logicWorld)
+G4LogicalVolume* WISDetectorTele::ConstructSr90Sourse()
 {
   LXSetUp *lxs = LXSetUp::Instance();
   G4Material* sourceMaterial = G4NistManager::Instance()->FindOrBuildMaterial("G4_Sr");
@@ -743,11 +745,11 @@ void WISDetectorTele::ConstructSr90Sourse(G4LogicalVolume  *logicWorld)
   new G4PVPlacement (0, G4ThreeVector(0.0, 0.0, posz), logicSourceAlPlug, "SourceAlPlug", logicSr90Container, false, 0, lxs->OverlapTest);
   new G4PVPlacement (0, G4ThreeVector(0.0, 0.0, 0.0), logicSrSupportRing, "SrSupportRing", logicSr90Container, false, 0, lxs->OverlapTest);
 
-  G4double sr90posz = -lxs->Sr90GapZ - lxs->CollimatorLeadZ -0.5*(lxs->Collimator1Z + lxs->SrSupportRingZ);
-  new G4PVPlacement (0, G4ThreeVector(0.0, 0.0, sr90posz), logicSr90Container, "Sr90SourceAssembly", logicWorld, false, 0, lxs->OverlapTest);
+  return logicSr90Container;
+//   G4double sr90posz = -lxs->Sr90GapZ - lxs->CollimatorLeadZ -0.5*(lxs->Collimator1Z + lxs->SrSupportRingZ);
+//   new G4PVPlacement (0, G4ThreeVector(0.0, 0.0, sr90posz), logicSr90Container, "Sr90SourceAssembly", logicWorld, false, 0, lxs->OverlapTest);
 
 }
-
 
 
 
@@ -785,4 +787,187 @@ void WISDetectorTele::CreateMaterial()
   PlywoodMaterial->AddMaterial(epoxy, fractionmass=13.0/28.0);
   PlywoodMaterial->AddMaterial(woodMaterial, fractionmass=15.0/28.0);
 
+}
+
+
+////////////////////////////////////////////////////////////////////////
+///// WISDetectorTele
+
+void WISDetectorTeleFrame::Construct()
+{
+  const G4VPhysicalVolume *physicalWorld = fDetector->GetphysiWorld();
+  G4LogicalVolume   *fLogicWorld = physicalWorld->GetLogicalVolume();
+
+  LXSetUp *lxs = LXSetUp::Instance();
+  CreateMaterial();
+
+  G4Material* environmentMaterial = G4NistManager::Instance()->FindOrBuildMaterial(lxs->EnvironmentMaterial);
+  G4Material* collimatorLeadMaterial = G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb");
+
+  G4double scontrin = lxs->SourceContainerRin;
+  G4double scontrout = lxs->SourceContainerRout;
+  G4double scontz = lxs->SourceContainerZ;
+
+  G4double colimleadz = lxs->CollimatorLeadZ;
+  G4double colimleadholer = lxs->CollimatorLeadHoleR;
+
+  G4Tubs *solidLeadCollimator = new G4Tubs("solidLeadCollimator", colimleadholer, scontrout, colimleadz/2.0, 0.0, 2.0*M_PI);
+  G4LogicalVolume *logicLeadCollimator = new G4LogicalVolume(solidLeadCollimator, collimatorLeadMaterial, "logicLeadCollimator");
+
+  G4double colimleadzpos = -lxs->BTargetZ - colimleadz/2.0;
+  new G4PVPlacement (0, G4ThreeVector(0.0, 0.0, colimleadzpos),
+                     logicLeadCollimator, "LeadCollimator", fLogicWorld, false, 0, lxs->OverlapTest);
+
+  G4Tubs *solidSrContainer1 = new G4Tubs("solidSrContainer1", 0.0, scontrout, scontz/2.0, 0.0, 2.0*M_PI);
+  G4Tubs *solidSrContainerCut = new G4Tubs("solidSrContainerCut", 0.0, scontrin, scontz/2.0, 0.0, 2.0*M_PI);
+  G4Transform3D srcntr(G4RotationMatrix(), G4ThreeVector(0.0, 0.0, lxs->SourceContainerTopZ));
+  G4SubtractionSolid *solidSrContainer = new G4SubtractionSolid("solidSrContainer", solidSrContainer1, solidSrContainerCut, srcntr);
+  G4LogicalVolume *logicSrContainer = new G4LogicalVolume(solidSrContainer, collimatorLeadMaterial, "logicSrContainer");
+
+  new G4PVPlacement (0, G4ThreeVector(0.0, 0.0, -lxs->BTargetZ - 0.5*(+scontz)-colimleadz),
+                     logicSrContainer, "SrContainer", fLogicWorld, false, 0, lxs->OverlapTest);
+
+  G4LogicalVolume *tlSensor = ConstructSensor();
+  G4LogicalVolume *tlPCB = ConstructPCB();
+  G4LogicalVolume *tlroPCB = ConstructROPCB();
+  G4LogicalVolume *tlFrame = ConstructAlFrame();
+  G4double ropcbypos = 0.5*(lxs->ROPCBY + lxs->CarrierPCBY) + lxs->CarrierROGap;
+  G4double frameypos = 0.5*(lxs->TeleFrameY - lxs->CarrierPCBY) - lxs->TeleFramePCBShift;
+
+  for (size_t si = 0; si < lxs->TelescopeSensorZpos.size(); ++si) {
+    G4double zpos = lxs->TelescopeSensorZpos[si] + lxs->OPPPSensorZ/2.0;
+    new G4PVPlacement (0, G4ThreeVector(0.0, 0.0, zpos), tlSensor, "AlSensor", fLogicWorld, false, si, lxs->OverlapTest);
+    zpos += (lxs->OPPPSensorZ + lxs->CarrierPCBZ)/2.0;
+    new G4PVPlacement (0, G4ThreeVector(0.0, 0.0, zpos), tlPCB, "AlPCB", fLogicWorld, false, si, lxs->OverlapTest);
+    new G4PVPlacement (0, G4ThreeVector(0.0, ropcbypos, zpos), tlroPCB, "ROPCB", fLogicWorld, false, si, lxs->OverlapTest);
+    G4double framezpos = zpos + lxs->TeleFrameZ/2.0 + lxs->CarrierPCBZ/2.0;
+    new G4PVPlacement (0, G4ThreeVector(0.0, frameypos, framezpos), tlFrame, "TeleFrame", fLogicWorld, false, si, lxs->OverlapTest);
+  }
+
+  // Counting volumes in the hole of the Lead Collomator
+  G4double countVolZ = 0.1 *mm;
+  G4Tubs *solidCountVolume = new G4Tubs("solidCountVolume", 0.0, colimleadholer, countVolZ/2.0, 0.0, 2.0*M_PI);
+  G4LogicalVolume *logicCountVolume = new G4LogicalVolume(solidCountVolume, environmentMaterial, "logicCountVolume");
+  G4double countVolZpos = 0.5*countVolZ - lxs->BTargetZ - colimleadz;
+  new G4PVPlacement (0, G4ThreeVector(0.0, 0.0, countVolZpos),
+                     logicCountVolume, "CounterVolume", fLogicWorld, false, 0, lxs->OverlapTest);
+  new G4PVPlacement (0, G4ThreeVector(0.0, 0.0, countVolZpos + colimleadz - countVolZ),
+                     logicCountVolume, "CounterVolume", fLogicWorld, false, 1, lxs->OverlapTest);
+
+  G4LogicalVolume *logicSr90Container = ConstructSr90Sourse();
+  G4double sr90posz = colimleadzpos + colimleadz/2.0 - lxs->Sr90GapZ - 0.5*(lxs->SrSupportRingZ);
+  new G4PVPlacement (0, G4ThreeVector(0.0, 0.0, sr90posz), logicSr90Container, "Sr90SourceAssembly", fLogicWorld, false, 0, lxs->OverlapTest);
+
+  ConstructBottomSupport(fLogicWorld);
+  G4AssemblyVolume* supportAssembly = ConstructSupportAssembly();
+  G4ThreeVector trsupport(0.0, -lxs->TeleFramePCBShift - (lxs->CarrierPCBY + lxs->FrameHolderY)/2.0, 0.0);
+  supportAssembly->MakeImprint(fLogicWorld, trsupport, 0, 0, lxs->OverlapTest);
+
+  AddSegmentation();
+
+}
+
+
+
+
+void WISDetectorTeleFrame::ConstructBottomSupport(G4LogicalVolume  *logicWorld)
+{
+  LXSetUp *lxs = LXSetUp::Instance();
+//   G4Material* plywoodMaterial = G4NistManager::Instance()->FindOrBuildMaterial("Plywood");
+  G4Material* floorMaterial = G4NistManager::Instance()->FindOrBuildMaterial("ShieldingConcrete");
+
+  G4double wsx = 2.0*lxs->TeleShieldingX;
+  G4double wsy = 2.0*lxs->TeleShieldingY;
+//   G4Box *solidWoodSupport = new G4Box("solidWoodSupport", wsx/2.0, wsy/2.0, lxs->WoodSupportZ/2.0);
+//   G4LogicalVolume *logicWoodSupport = new G4LogicalVolume(solidWoodSupport, plywoodMaterial, "logicWoodSupport");
+
+  G4Box *solidFloor = new G4Box("solidFloor", wsx/2.0, wsy/2.0, lxs->FloorZ/2.0);
+  G4LogicalVolume *logicFloor = new G4LogicalVolume(solidFloor, floorMaterial, "logicFloor");
+
+  G4double posy = wsy/4.0 - lxs->ShieldingGapY - lxs->TeleShieldingThickess;
+//   G4double posz = lxs->WoodSupportZpos + lxs->WoodSupportZ/2.0;
+//   new G4PVPlacement (0, G4ThreeVector(0.0, posy, posz), logicWoodSupport, "WoodSupport", logicWorld, false, 0, lxs->OverlapTest);
+  G4double posz = lxs->FloorGapZ + lxs->FloorZ/2.0;
+  new G4PVPlacement (0, G4ThreeVector(0.0, posy, posz), logicFloor, "Floor", logicWorld, false, 0, lxs->OverlapTest);
+
+}
+
+
+
+G4LogicalVolume* WISDetectorTeleFrame::ConstructROPCB()
+{
+  LXSetUp *lxs = LXSetUp::Instance();
+  G4Material* bpPCBMaterial = G4NistManager::Instance()->FindOrBuildMaterial("FR4");
+
+  G4Box *solidROPCB = new G4Box("solidCarrierPCB1", lxs->ROPCBX/2.0,
+                                lxs->ROPCBY/2.0, lxs->ROPCBZ/2.0);
+  G4LogicalVolume *logicROPCB = new G4LogicalVolume(solidROPCB, bpPCBMaterial, "logicROPCB");
+
+  return logicROPCB;
+}
+
+
+
+G4LogicalVolume* WISDetectorTeleFrame::ConstructAlFrame()
+{
+  LXSetUp *lxs = LXSetUp::Instance();
+  G4Material* frameMaterial = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+
+  G4Box *solidFrame0 = new G4Box("solidFrame0", lxs->TeleFrameX/2.0,
+                                lxs->TeleFrameY/2.0, lxs->TeleFrameZ/2.0);
+
+  G4Box *solidFrameCutAlpide = new G4Box("solidFrameCutAlpide", lxs->TeleFrameCutAlpideX/2.0,
+                                lxs->TeleFrameCutAlpideY/2.0, lxs->TeleFrameZ);
+  G4Box *solidFrameCutROPCB = new G4Box("solidFrameCutROPCB", lxs->ROPCBX/2.0,
+                                lxs->ROPCBY/2.0, lxs->TeleFrameZ);
+
+//   G4double cuty = 0.5*(lxs->TeleFrameCutAlpideY-lxs->TeleFrameY) + lxs->TeleFrameCutAlpideGapY;
+  G4double cuty = 0.5*(lxs->CarrierPCBY-lxs->TeleFrameY) + lxs->TeleFramePCBShift;
+  G4Transform3D alpcbcuttr(G4RotationMatrix(), G4ThreeVector(0.0, cuty, 0.0));
+  G4SubtractionSolid *solidFrame1 = new G4SubtractionSolid("solidSrContainer", solidFrame0, solidFrameCutAlpide, alpcbcuttr);
+  cuty += lxs->CarrierROGap + (lxs->CarrierPCBY+lxs->ROPCBY)/2.0;
+  G4Transform3D rocbcuttr(G4RotationMatrix(), G4ThreeVector(0.0, cuty, 0.0));
+  G4SubtractionSolid *solidFrame = new G4SubtractionSolid("solidSrContainer", solidFrame1, solidFrameCutROPCB, rocbcuttr);
+
+  G4LogicalVolume *logicFrame = new G4LogicalVolume(solidFrame, frameMaterial, "logicFrame");
+
+  return logicFrame;
+}
+
+
+
+
+G4AssemblyVolume* WISDetectorTeleFrame::ConstructSupportAssembly()
+{
+  LXSetUp *lxs = LXSetUp::Instance();
+  G4Material* supportMaterial = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+  G4Material* shieldingMaterial = G4NistManager::Instance()->FindOrBuildMaterial("FR4");
+
+  G4AssemblyVolume *teleSupportAssembly = new G4AssemblyVolume();
+
+  G4Box *solidFrameHolder = new G4Box("solidFrameHolder", lxs->FrameHolderX/2.0,
+                                lxs->FrameHolderY/2.0, lxs->FrameHolderZ/2.0);
+  G4LogicalVolume *logicFrameHolder = new G4LogicalVolume(solidFrameHolder, supportMaterial, "logicFrameHolder");
+
+  G4Box *solidSupportPole0 = new G4Box("solidSupportPole", lxs->SupportPoleX/2.0,
+                                lxs->SupportPoleY/2.0, lxs->SupportPoleZ/2.0);
+  G4Box *solidSupportPoleCut = new G4Box("solidSupportPoleCut", lxs->SupportPoleX/2.0 - lxs->SupportPoleThickness,
+                                lxs->SupportPoleY/2.0 - lxs->SupportPoleThickness, lxs->SupportPoleZ);
+  G4SubtractionSolid *solidSupportPole = new G4SubtractionSolid("solidSupportPole", solidSupportPole0, solidSupportPoleCut);
+  G4LogicalVolume *logicSupportPole = new G4LogicalVolume(solidSupportPole, supportMaterial, "logicSupportPole");
+
+  G4ThreeVector holdertr(0.0, 0.0, lxs->FrameHolderZ/2.0);
+  teleSupportAssembly->AddPlacedVolume(logicFrameHolder, holdertr, 0);
+  G4ThreeVector poletr(0.0, -0.5*(lxs->FrameHolderY+lxs->SupportPoleY), lxs->FloorGapZ-lxs->SupportPoleZ/2.0);
+  teleSupportAssembly->AddPlacedVolume(logicSupportPole, poletr, 0);
+
+  G4Box *solidShieldingBoxBottom0 = new G4Box("solidShieldingBoxBottom0", lxs->ShieldingBoxBottomX/2.0,
+                                lxs->ShieldingBoxBottomY/2.0, lxs->ShieldingBoxBottomZ/2.0);
+  G4SubtractionSolid *solidShieldingBoxBottom = new G4SubtractionSolid("solidShieldingBoxBottom",
+                                                                       solidShieldingBoxBottom0, solidFrameHolder);
+  G4LogicalVolume *logicShieldingBoxBottom = new G4LogicalVolume(solidShieldingBoxBottom, shieldingMaterial, "logicShieldingBoxBottom");
+  G4ThreeVector shielbottomtr(0.0, 0.5*(lxs->ShieldingBoxBottomY-lxs->FrameHolderY), lxs->FrameHolderZ/2.0);
+  teleSupportAssembly->AddPlacedVolume(logicShieldingBoxBottom, shielbottomtr, 0);
+
+  return teleSupportAssembly;
 }

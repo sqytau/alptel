@@ -664,3 +664,8 @@
 
 /vis/geometry/set/colour     logicCountVolume        0  0.73 0.08 0.94 0.8
 
+/vis/geometry/set/colour     logicFrame              0  0.4  0.4  0.4  1.0
+/vis/geometry/set/colour     logicROPCB              0  0.35 0.55 0.32 1.0
+/vis/geometry/set/colour     logicFrameHolder        0  0.64 0.55 0.75 1.0
+/vis/geometry/set/colour     logicSupportPole        0  0.52 0.67 0.62 1.0
+/vis/geometry/set/colour     logicShieldingBoxBottom 0  0.61 0.64 0.44 1.0

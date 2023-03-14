@@ -68,10 +68,26 @@ class WISDetectorTele: public LxDetector
     void AddSegmentation();
     void CreateMaterial();
     void ConstructShielding(G4LogicalVolume  *logicWorld);
-    void ConstructBottomSupport(G4LogicalVolume  *logicWorld);
-    void ConstructSr90Sourse(G4LogicalVolume  *logicWorld);
-//     G4AssemblyVolume* ConstructSupportAssembly(G4double &sphight);
+    virtual void ConstructBottomSupport(G4LogicalVolume  *logicWorld);
+    G4LogicalVolume* ConstructSr90Sourse();
 };
 
+
+
+
+class WISDetectorTeleFrame: public WISDetectorTele
+{
+  public:
+    WISDetectorTeleFrame(DetectorConstruction *detc = 0): WISDetectorTele(detc) {};
+    virtual ~WISDetectorTeleFrame() {};
+    virtual void Construct();
+
+  protected:
+    G4LogicalVolume* ConstructROPCB();
+    G4LogicalVolume* ConstructAlFrame();
+//     void ConstructShielding(G4LogicalVolume  *logicWorld);
+    virtual void ConstructBottomSupport(G4LogicalVolume  *logicWorld);
+    G4AssemblyVolume* ConstructSupportAssembly();
+};
 
 #endif
