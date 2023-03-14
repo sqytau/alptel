@@ -1,0 +1,103 @@
+# $Id: tb2016.mac 81528 2016-03-016 11:03 sqy $
+#
+# macro file for lxbeamsim.cc 
+#
+# Histograms settings and activation
+# 
+# 
+#
+
+# at exit means transmitted
+# 1D histograms
+
+/analysis/h1/set  0  1  0.0  1.0	 #number of events processed
+
+/analysis/h1/set 10  100  0.0  18.0 GeV	 #e- energy at exit
+/analysis/h1/set 30  100  0.0  18.0 GeV	 #e- energy reflected
+/analysis/h1/set 12  100  0.0  30.0 deg	 #e- space angle at exit (theta)
+/analysis/h1/set 32  100  0.0  0.6 deg	 #e- space angle reflected (theta)
+/analysis/h1/set 11  100  0.0  18.0 GeV	 #e- fluence at exit dE(MeV)/dOmega
+/analysis/h1/set 13  100 -30.0 +30.0 deg	 #e- projected angle at exit std::atan(direction.x()/std::fabs(direction.z()))
+
+/analysis/h1/set 14  4000 -200.0 +200.0 cm		#e- x-position at exit  
+/analysis/h1/set 15  3000  0.  +300.0 cm		#e- radius at exit  
+
+/analysis/h1/set 20 200 0.0  18.0 GeV	     #gamma: energy at exit
+/analysis/h1/set 40 200 0.0  18.0 GeV	     #gamma: energy at back
+/analysis/h1/set 22  100  0.0  0.6 deg	     #gamma: space angle at exit (theta)
+/analysis/h1/set 42  100  0.0  0.6 deg	     #gamma: space angle reflected (theta)
+/analysis/h1/set 21  100  0.0  18.0 GeV	     #gamma: fluence at exit dE(MeV)/dOmega
+/analysis/h1/set 23  100 -0.6 +0.6 deg	     #gamma: projected angle at exit std::atan(direction.x()/std::fabs(direction.z()))
+
+/analysis/h1/set 24  4000 -200.0 +200.0 cm		#gamma: x-position at exit  
+/analysis/h1/set 25  3000  0.  +300.0 cm		#gamma: radius at exit  
+
+/analysis/h1/set 51  3000  0.0 +300.0 cm		#e-: vertex z-position  
+/analysis/h1/set 52  3000  0.  +300.0 cm		#gamma: vertex z-position  
+
+# luxe
+/analysis/h1/set 53  1000  -100.0  100.0 um		#primary vertex x-position  
+/analysis/h1/set 54  1000  -100.0  100.0 um		#primary vertex y-position  
+/analysis/h1/set 55  1000  -20.01  -19.99 cm		#primary vertex z-position  
+
+/analysis/h1/set 56  1000  -0.1  0.1 GeV		#primary momentum x
+/analysis/h1/set 57  1000  -0.1  0.1 GeV		#primary momentum y
+/analysis/h1/set 58  1000  0.0  20.0 GeV		#primary momentum z  
+
+/analysis/h1/set 59  1000  -500.0  500.0 um		#primary focus x-position  
+/analysis/h1/set 60  1000  -500.0  500.0 um		#primary focus y-position  
+
+#/analysis/h1/set 61  1000   7.337  7.339 ns		#electron time at exit for 2+ m drift  
+#/analysis/h1/set 62  1000   7.337  7.339 ns		#gamma time at exit for 2+ m drift
+
+/analysis/h1/set 65  1800  0.0  18.0 GeV		#electron spectrum at exit
+/analysis/h1/set 66  1800  0.0  18.0 GeV		#photon spectrum at exit
+/analysis/h1/set 67  1800  0.0  18.0 GeV		#positron spectrum at exit
+
+/analysis/h1/set 68  2000  -10.0  10.0 cm		#electron x-position at exit 
+/analysis/h1/set 69  2000  -10.0  10.0 cm		#photon x-position at exit
+/analysis/h1/set 70  2000  -10.0  10.0 cm		#positron x-position at exit
+                  
+
+# 2D histograms
+/analysis/h2/setX 0  100 -200.0 +200.0  cm 	#e- x-position at exit  
+/analysis/h2/setY 0  18  0.0  18.0 GeV 	        #e- energy at exit  
+  
+/analysis/h2/setX 1  10  0.0  20.0 GeV 	        #e- energy at exit  
+/analysis/h2/setY 1  10  0.0  20.0 GeV 	        #gamma: energy at exit  
+
+/analysis/h2/setX 2  100 -0.5  0.5  mm 	#charged x-position at exit  
+/analysis/h2/setY 2  100 -0.5  0.5  mm 	#charged y-position at exit  
+
+/analysis/h2/setX 3  100 -0.5  0.5  mm 	#gamma: x-position at exit  
+/analysis/h2/setY 3  100 -0.5  0.5  mm 	#gamma: y-position at exit  
+
+/analysis/h2/setX 4  100 0.0    +300.0  cm 	#e-: vertex z-position  
+/analysis/h2/setY 4  100 0.0     18.0    GeV  	#e-: energy at exit  
+#/analysis/h2/setY 4  100  -200.0 +200.0  cm 	#e-: x-position at exit  
+
+/analysis/h2/setX 5  100 0.0    +300.0  cm 	#gamma: vertex z-position  
+/analysis/h2/setY 5  100 0.0     18.0    GeV  	#gamma: energy at exit  
+#/analysis/h2/setY 5  100  -200.0 +200.0  cm 	#gamma: x-position at exit  
+
+/analysis/h2/setX 6  100  0.0    18.0  GeV 	#electron: polar angle vs E at exit  
+/analysis/h2/setY 6  100 0.0    1.6 rad 	#electron: polar angle vs E at exit  
+
+/analysis/h2/setX 7  100  0.0    18.0  GeV 	#gamma: polar angle vs E at exit  
+/analysis/h2/setY 7  100 0.0    1.6   rad 	#gamma: polar angle vs E at exit  
+
+/analysis/h2/setX 8  100  0.0    18.0  GeV 	#gamma: polar angle vs E at exit urad scale 
+/analysis/h2/setY 8  100 0.0    2.0e-3   rad 	#gamma: polar angle vs E at exit urad scale 
+
+#/analysis/h2/setX 9  100  -5.0    5.0  mm 	#gamma: x,y position at exit 
+#/analysis/h2/setY 9  100  -5.0    5.0  mm 	#gamma: x,y position at exit 
+/analysis/h2/setX 9  500  -5.0    5.0  mm 	#gamma: x,y position at exit 
+/analysis/h2/setY 9  500  -5.0    5.0  mm 	#gamma: x,y position at exit 
+
+/analysis/h2/setX 10  500  -100.0    100.0 um 	#primary x vs dx/dz 
+/analysis/h2/setY 10  500  -5.0    5.0  rad 	#primary x vs dx/dz 
+/analysis/h2/setX 11  500  -100.0    100.0 um	#x vs dx/dz at IP
+/analysis/h2/setY 11  500  -5.0    5.0  rad 	#x vs dx/dz at IP 
+
+/analysis/h2/setX 12  100   0.0    18.0  GeV 	#positron: polar angle vs E at exit  
+/analysis/h2/setY 12  100   0.0    1.6   rad 	#positron: polar angle vs E at exit  

@@ -1,0 +1,127 @@
+# $Id: wis_tele3_settings.mac 2023-01-19 sqy $
+#
+# macro file for lxbeamsim.cc 
+#
+/control/verbose 2
+/run/verbose 2
+#/process/em/verbose 3
+#
+
+# Some geometry settings
+############################################
+
+
+
+#/lxphoton/det/setWorldZ     2400.0 cm
+#/lxphoton/det/setWorldXY    400.0 mm
+
+#/lxphoton/det/setAbsMat     Aluminium
+#/lxphoton/det/setAbsThick   0.875 mm
+#/lxphoton/det/setAbsYZ      10 cm
+#/lxphoton/det/setAbsZpos    0.0 cm
+
+# Simulation settings
+############################################
+#/lxphoton/phys/addPhysics  emstandard_opt0
+#/lxphoton/phys/addPhysics local
+
+#/lxphoton/stepMax       1 um
+#/lxphoton/stepMax       10 um
+#
+/run/setCut             1 um
+#
+
+/luxe/run/dump_geometry  false
+/luxe/run/save_primary_trajectory  false
+
+/luxe/run/add_intercept_volume  AlSensor         1000
+/luxe/run/add_intercept_volume  OPPPSensitive    2000 1
+/luxe/run/add_intercept_volume  AlPCB            3000
+/luxe/run/add_intercept_volume  WoodSupport      4000
+
+/luxe/run/add_intercept_volume  LeadCollimator   5000
+/luxe/run/add_intercept_volume  SourceAlPlug     6000
+/luxe/run/add_intercept_volume  CounterVolume    8000
+
+#/control/execute lxmagnet_hics.mac
+
+/run/initialize
+
+/luxe/run/add_sensitive_volume  OPPPSensitive:2000:0:1
+
+#/luxe/run/run_id   111
+
+# Primary beam settings
+############################################
+#
+#/lxphoton/gun/setDefault
+#/lxphoton/gun/beamType    mono
+#/lxphoton/gun/setPosition  0.0  0.0  -16.0 mm
+
+/lxphoton/gun/beamType    source
+
+#/lxphoton/gun/beamType    gaussian
+#/lxphoton/gun/setSigmaX   5 um
+#/lxphoton/gun/setSigmaY   5 um
+#Target is at -7.51 m
+#/lxphoton/gun/setPosZ    -8.0 m
+#/lxphoton/gun/setFocus    8.1 m
+
+#/lxphoton/gun/beamType              mc
+#/lxphoton/gun/MCParticlesFile       test_data_0.out
+#/lxphoton/gun/MCParticlesFile       test_data1.out
+#/lxphoton/gun/MCParticlesFileList  list_of_mc_out_files.txt
+
+#/lxphoton/gun/beamType              mchdf5
+#/lxphoton/gun/MCParticlesFile       file_name.h5
+
+#/lxphoton/gun/beamType              mctupleg4
+#/lxphoton/gun/MCParticlesFile       luxe_bckg_mono_175gev_w001x0_cv7emstd_1umstep_tv31_hv1_G4DormandPrince745_kt20_fit1000.root
+
+#This allows to select specific particles for simulation from MC files.
+#Particles are added to the selection list by this command
+#/lxphoton/gun/MCSelectParticle     22
+#/lxphoton/gun/MCSelectParticle     -11
+
+# This is actually the maxim number of events generated if mc_weight > MCWightSacle and then mc_weight/=MCWightSacle
+#/lxphoton/gun/MCWeightScale         1000
+
+#Number of the events to skip in the beginning of the file
+#/lxphoton/gun/skipMCEvents          10
+
+#/lxphoton/gun/SpectraFile   spectra_test1.txt
+#/lxphoton/gun/SpectraFile   spectra_test_compt.txt
+
+/gun/particle    e-
+/gun/energy      2.28 MeV
+
+#
+# TTree output
+############################################
+/lxphoton/ttree_cut_x  300.0 mm
+/lxphoton/ttree_cut_y  300.0 mm
+#/lxphoton/ttree_particle e-
+
+/lxphoton/ttree_cut_x  1 m
+/lxphoton/ttree_cut_y  1 m
+#/lxphoton/ttree_particle gamma
+/lxphoton/ttree_particle all
+#/lxphoton/ttree_particle e+
+
+
+
+/analysis/setFileName    wis_tele3_mono_e223mev.root
+
+# Histograms settings and activation, some of them are adjusted in RunAction::BeginOfRunAction
+############################################
+/control/execute hist_settings.mac
+
+/random/setSeeds 12345 5
+
+
+/run/printProgress 10000
+#/run/beamOn 10000000
+#/run/beamOn 6250000
+/run/beamOn 200
+####################################
+
