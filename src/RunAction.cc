@@ -134,7 +134,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
   if (isMaster) {
     if (fDumpGeometry) {
       G4GDMLParser parser;
-      parser.Write("lxgeomdump.gdml", fDetector->GetphysiWorld(), false);
+      parser.Write("lxgeomdump.gdml", fDetector->GetphysiWorld(), true);
     }
   }
 
