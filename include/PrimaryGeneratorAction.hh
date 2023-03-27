@@ -37,6 +37,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     void GenerateMono(G4Event* anEvent);
     void GeneratefromMC(G4Event* anEvent);
     void GenerateSource(G4Event* anEvent);
+    void GenerateCosmic(G4Event* anEvent);
 
     G4double GetX0() const {return fx0;}
     G4double GetY0() const {return fy0;}
@@ -67,7 +68,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     void AddMCSelectParticle(const G4int pdgid);
     void SavePrimaryTrack() const;
 
-    enum tBeamType : G4int {beamGauss, beamMono, beamMC, beamMCh5, beamMCTupleG4, beamSource};
+    enum tBeamType : G4int {beamGauss, beamMono, beamMC, beamMCh5, beamMCTupleG4, beamSource, beamCosmic};
 
   protected:
 

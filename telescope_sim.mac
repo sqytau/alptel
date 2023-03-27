@@ -58,7 +58,8 @@
 #/lxphoton/gun/beamType    mono
 #/lxphoton/gun/setPosition  0.0  0.0  -16.0 mm
 
-/lxphoton/gun/beamType    source
+#/lxphoton/gun/beamType    source
+/lxphoton/gun/beamType    cosmic
 
 #/lxphoton/gun/beamType    gaussian
 #/lxphoton/gun/setSigmaX   5 um
@@ -89,7 +90,7 @@
 #Number of the events to skip in the beginning of the file
 #/lxphoton/gun/skipMCEvents          10
 
-#/lxphoton/gun/SpectraFile   spectra_test1.txt
+/lxphoton/gun/SpectraFile   cosmic_muon_spectrum.txt
 #/lxphoton/gun/SpectraFile   spectra_test_compt.txt
 
 /gun/particle    e-
@@ -122,6 +123,6 @@
 /run/printProgress 10000
 #/run/beamOn 10000000
 #/run/beamOn 6250000
-/run/beamOn 200
+/run/beamOn 5000
 ####################################
 

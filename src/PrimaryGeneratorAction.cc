@@ -112,6 +112,8 @@ void PrimaryGeneratorAction::SetBeamType(G4String val)
     fBeamType = beamMCTupleG4;
   } else if (val == "source") {
     fBeamType = beamSource;
+  } else if (val == "cosmic") {
+    fBeamType = beamCosmic;
   } else {
     G4cout << "PrimaryGeneratorAction::SetBeamType: <" << val << ">"
            << " is not defined. Using default: gaussian."
@@ -206,6 +208,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     GenerateMono(anEvent);
   } else if (fBeamType == beamSource) {
     GenerateSource(anEvent);
+  } else if (fBeamType == beamCosmic) {
+    GenerateCosmic(anEvent);
   }
     else if (fBeamType == beamMC || fBeamType == beamMCh5 || fBeamType == beamMCTupleG4) {
     GeneratefromMC(anEvent);
@@ -267,6 +271,35 @@ void PrimaryGeneratorAction::GenerateSource(G4Event* anEvent)
   G4ParticleDefinition* ion = G4IonTable::GetIonTable()->GetIon(Z,A,excitEnergy);
   fParticleGun->SetParticleDefinition(ion);
   fParticleGun->SetParticleCharge(ionCharge);
+
+  fParticleGun->GeneratePrimaryVertex(anEvent);
+}
+
+
+
+void PrimaryGeneratorAction::GenerateCosmic(G4Event* anEvent)
+{
+  LXSetUp *lxs = LXSetUp::Instance();
+
+  G4int pid = 13;
+  G4double z0 = lxs->TelescopeSensorZpos.at(0) - 1.0*mm;
+  G4double tlx = lxs->OPPPSensorX;
+  G4double tly = lxs->OPPPSensorY;
+  G4double tlz = lxs->TelescopeSensorZpos.at(2) - z0;
+  G4double vmax = 1 - pow(cos(atan2(sqrt(tlx*tlx+tly*tly),tlz)), 3.0);
+  G4ThreeVector dir_p, posmu, rzl;
+  do {
+    posmu.set(tlx * (G4UniformRand() - 0.5), tly * (G4UniformRand() - 0.5), z0);
+    dir_p.setRThetaPhi(1.0, acos(pow(1.0-vmax*G4UniformRand(), 1.0/3.0)), 2.0*M_PI*G4UniformRand());
+    rzl = posmu + dir_p * tlz;
+  } while ( (abs(rzl.x()) > tlx/2.0) || (abs(rzl.y()) > tly/2.0));
+
+  fParticleGun->SetParticlePosition(posmu);
+  fParticleGun->SetParticleMomentumDirection(dir_p);
+
+  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* particle = particleTable->FindParticle(pid);
+  fParticleGun->SetParticleDefinition(particle);
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
 }
