@@ -1,3 +1,4 @@
+#include <G4Scintillation.hh>
 #include "OpticalPhysics.hh"
 #include "LXSetUp.hh"
 
@@ -44,9 +45,9 @@ void OpticalPhysics::ConstructProcess()
 	fCerenkovProcess->SetTrackSecondariesFirst(true);
 	G4Scintillation* fScintillationProcess = new G4Scintillation("Scintillation");
 	fScintillationProcess->SetScintillationByParticleType(false);
-	fScintillationProcess->SetScintillationYieldFactor(lxs->ScintPhysicsYield);
+//	fScintillationProcess->SetScintillationYieldFactor(lxs->ScintPhysicsYield);
 	fScintillationProcess->SetTrackSecondariesFirst(true);
-	G4cout << "Optical physics!: scint Yield factor: " << fScintillationProcess->GetScintillationYieldFactor() << G4endl;
+//	G4cout << "Optical physics!: scint Yield factor: " << fScintillationProcess->GetScintillationYieldFactor() << G4endl;
 
 	//G4OpAbsorption* fAbsorptionProcess = new G4OpAbsorption();
 	//G4OpRayleigh* fRayleighScatteringProcess = new G4OpRayleigh();

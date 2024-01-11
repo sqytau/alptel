@@ -41,6 +41,8 @@
 #include "G4RunManager.hh"
 #include "G4Track.hh"
 
+#include "G4AnalysisManager.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 StackingAction::StackingAction(EventAction* EA)
@@ -71,12 +73,12 @@ StackingAction::ClassifyNewTrack(const G4Track* aTrack)
 
   if(!fIDdefined) {
     fIDdefined = true;
-    fPhotoGamma = G4PhysicsModelCatalog::GetIndex("phot_fluo");
-    fComptGamma = G4PhysicsModelCatalog::GetIndex("compt_fluo");
-    fPhotoAuger = G4PhysicsModelCatalog::GetIndex("phot_auger");
-    fComptAuger = G4PhysicsModelCatalog::GetIndex("compt_auger");
-    fPixeGamma = G4PhysicsModelCatalog::GetIndex("gammaPIXE");
-    fPixeAuger = G4PhysicsModelCatalog::GetIndex("e-PIXE");
+    fPhotoGamma = G4PhysicsModelCatalog::GetModelID("phot_fluo");
+    fComptGamma = G4PhysicsModelCatalog::GetModelID("compt_fluo");
+    fPhotoAuger = G4PhysicsModelCatalog::GetModelID("phot_auger");
+    fComptAuger = G4PhysicsModelCatalog::GetModelID("compt_auger");
+    fPixeGamma = G4PhysicsModelCatalog::GetModelID("gammaPIXE");
+    fPixeAuger = G4PhysicsModelCatalog::GetModelID("e-PIXE");
   }
   G4int idx = aTrack->GetCreatorModelID();
 

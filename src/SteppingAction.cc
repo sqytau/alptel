@@ -3,7 +3,10 @@
 //
 
 #include <map>
+#include <vector>
 #include <tuple>
+#include <algorithm>
+#include <numeric>
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -12,6 +15,7 @@
 #include "G4RunManager.hh"
 #include "G4StepPoint.hh"
 #include "G4Event.hh"
+#include "G4Exception.hh"
 
 #include "SteppingAction.hh"
 
@@ -24,6 +28,7 @@
 
 #include "G4Step.hh"
 
+#include "G4AnalysisManager.hh"
 
 
 SteppingAction::SteppingAction(DetectorConstruction* DET, EventAction* EA)
@@ -192,7 +197,7 @@ void SteppingAction::ProcessInDetector(const G4Step* aStep, const std::vector<G4
   G4ThreeVector local = theTouchable->GetHistory()->GetTransform(vdepth).TransformPoint(position);
 
   G4int detid = dettype[0] + theTouchable->GetHistory()->GetVolume(vdepth)->GetCopyNo();
-  G4int bdec = 10;
+  G4int bdec = 1000;
   for (auto iv = dettype.cbegin()+1; iv != dettype.cend(); ++iv) {
     detid += bdec * theTouchable->GetHistory()->GetVolume(vdepth - (*iv))->GetCopyNo();
     bdec *= 10;
@@ -348,11 +353,11 @@ void SteppingAction::ProcessScintCerenkov(const G4Step* aStep)
  //G4cout << "First step in lanex: " << theTouchable->GetVolume()->GetName() << G4endl;
 							
  G4int dettype =-1; //0 for cherenkov channel, 1 for scint screen, 2 for scint. camera
- if (theTouchable->GetVolume()->GetName().contains("CerenkovStrawInnerPhysical")) // && (aStep->GetTrack()->GetCurrentStepNumber()==1))
+ if (G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "CerenkovStrawInnerPhysical")) // && (aStep->GetTrack()->GetCurrentStepNumber()==1))
    {dettype=0;}
- else if ((theTouchable->GetVolume()->GetName().contains("scintPhosphorPhysical") ||  theTouchable->GetVolume()->GetName().contains("LysoCal"))) //&& (aStep->GetTrack()->GetCurrentStepNumber()==1))
+ else if ((G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "scintPhosphorPhysical") ||  G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "LysoCal"))) //&& (aStep->GetTrack()->GetCurrentStepNumber()==1))
    {dettype=1;}
- else if (theTouchable->GetVolume()->GetName().contains("ScintCameraApertureInnerPhysical"))
+ else if (G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "ScintCameraApertureInnerPhysical"))
    {dettype=2;}
  else {return;}
 
@@ -378,12 +383,12 @@ local = theTouchable->GetHistory()->GetTopTransform().TransformPoint(globalHitPo
 
    local = theTouchable->GetHistory()->GetTopTransform().TransformPoint(globalHitPos);
 
-   if(theTouchable->GetVolume()->GetName().contains("LysoCal")){DetectorCopyNo = theTouchable->GetCopyNumber() + 2;}
+   if(G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "LysoCal")){DetectorCopyNo = theTouchable->GetCopyNumber() + 2;}
    else {
    theTouchable->MoveUpHistory();
-   if (theTouchable->GetVolume()->GetName().contains("Brem")){DetectorCopyNo=0;}
+   if (G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "Brem")){DetectorCopyNo=0;}
    theTouchable->MoveUpHistory();
-   if (theTouchable->GetVolume()->GetName().contains("HICS")){DetectorCopyNo=1;}
+   if (G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "HICS")){DetectorCopyNo=1;}
    }
  }
  else if  (dettype==2){
@@ -391,8 +396,8 @@ local = theTouchable->GetHistory()->GetTopTransform().TransformPoint(globalHitPo
    theTouchable->MoveUpHistory();
       MotherCopyNo = theTouchable->GetCopyNumber();  
 
-   if (theTouchable->GetVolume()->GetName().contains("Brem")){DetectorCopyNo=0;}
-   if (theTouchable->GetVolume()->GetName().contains("HICS")){DetectorCopyNo=1; MotherCopyNo -= 2;}
+   if (G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "Brem")){DetectorCopyNo=0;}
+   if (G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "HICS")){DetectorCopyNo=1; MotherCopyNo -= 2;}
  }
 
 

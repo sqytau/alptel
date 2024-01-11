@@ -2,6 +2,7 @@
 /// \brief Implementation of the HistoManager class
 //
 
+#include "G4AnalysisManager.hh"
 #include "HistoManager.hh"
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
@@ -10,7 +11,7 @@
 
 
 HistoManager::HistoManager()
-  : fFileName("lxphoton_out_vg1"), fHMessanger(0),
+  : fFileName("lxphoton_out_vg1.root"), fHMessanger(0),
     fTreeCutX(1.0*mm), fTreeCutY(1.0*mm),
     fTreeParticle("gamma"), fvHitTrackList(0), fvTracks(0)
 {
@@ -281,7 +282,7 @@ void HistoManager::Book()
     G4cout << "2D histogram id: " << ih << G4endl; }
 
     
-      if(lxs->ScintCerenkovPhysics){
+  if(lxs->ScintCerenkovPhysics){
     analysisManager->CreateH1("h71", "Optical photons produced in Brem. Cerenkov Channels (Channel ID)", lxs->CerenkovChannels, 0, lxs->CerenkovChannels);
     analysisManager->CreateH1("h72", "Optical photons produced in IP Cerenkov Channels (Channel ID)", lxs->CerenkovChannels, 0, lxs->CerenkovChannels);
     analysisManager->CreateH1("h73", "Optical photons produced in gamma spectrometer e+ side Cerenkov Channels (Channel ID)", lxs->CerenkovChannels, 0, lxs->CerenkovChannels);

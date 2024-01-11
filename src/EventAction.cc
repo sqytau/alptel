@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <functional>
 
+#include "G4AnalysisManager.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4RunManager.hh"
@@ -333,19 +334,19 @@ void  EventAction::ClearData()
     mitr->second.clear();
   }
   fHitTrackGPos.clear();
-  
+
   for (auto mitr = fHitTrackId.begin(); mitr != fHitTrackId.end(); ++mitr) {
-    mitr->second.clear();  
+    mitr->second.clear();
   }
   fHitTrackId.clear();
-  
+
   for (auto mitr = fHitTrackGTime.begin(); mitr != fHitTrackGTime.end(); ++mitr) {
-    mitr->second.clear();  
+    mitr->second.clear();
   }
   fHitTrackGTime.clear();
-  
+
   for (auto mitr = fHitTrackEDep.begin(); mitr != fHitTrackEDep.end(); ++mitr) {
-    mitr->second.clear();  
+    mitr->second.clear();
   }
   fHitTrackEDep.clear();
 

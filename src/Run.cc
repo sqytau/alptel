@@ -4,6 +4,7 @@
 #include "Run.hh"
 #include "DetectorConstruction.hh"
 #include "PrimaryGeneratorAction.hh"
+#include "G4AnalysisManager.hh"
 #include "HistoManager.hh"
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
@@ -465,6 +466,15 @@ void Run::SaveDetectorTransformation(const G4VPhysicalVolume *pv, std::vector<co
     G4Exception("Run::", "SaveDetectorTransformation()", FatalException, msgstr.c_str());
   }
 
+  G4LogicalVolume  *lvsens = pv->GetLogicalVolume();
+  const G4VSolid *solsens = lvsens->GetSolid();
+  G4String soltype(solsens->GetEntityType());
+  if (soltype == "G4Box") {
+    size_z = 2.0 * (dynamic_cast<const G4Box*>(solsens))->GetZHalfLength() /mm;
+  } else if (soltype == "G4Tubs") {
+    size_z = 2.0 * dynamic_cast<const G4Tubs*>(solsens)->GetZHalfLength() /mm;
+  }
+
   G4int detid;
   if (subdepth <= 0) detid = pv->GetCopyNo();
   else detid = pvol[l-subdepth+1]->GetCopyNo();
@@ -488,7 +498,7 @@ void Run::SaveDetectorTransformation(const G4VPhysicalVolume *pv, std::vector<co
   analysisManager->FillNtupleDColumn(4, 12, mtrx.getTheta() );
   analysisManager->FillNtupleDColumn(4, 13, mtrx.getPsi() );
 
-  G4LogicalVolume  *lvsens = pv->GetLogicalVolume();
+//   G4LogicalVolume  *lvsens = pv->GetLogicalVolume();
   const G4Material  *lvmat = lvsens->GetMaterial();
   analysisManager->FillNtupleDColumn(4, 14, lvsens->GetMass()/kg);
   analysisManager->FillNtupleSColumn(4, 15, lvmat->GetName());
@@ -532,7 +542,7 @@ void Run::SaveVolumeTransformation(const G4VPhysicalVolume *pv, std::vector<cons
   const auto &volids = fInterceptVol[detname];
 
   G4int detid = volids[0] + pv->GetCopyNo();
-  G4int bdec = 10;
+  G4int bdec = 1000;
   for (auto iv = volids.cbegin()+1; iv != volids.cend(); ++iv) {
     detid += bdec * pvol[l-(*iv)+1]->GetCopyNo();
     bdec *= 10;

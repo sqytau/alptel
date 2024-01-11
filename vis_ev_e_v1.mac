@@ -123,14 +123,17 @@
 #/lxphoton/gun/MCParticlesFile   test_data_0.out
 #/lxphoton/gun/MCParticlesFile   test_data1.out
 
-/lxphoton/gun/beamType    mono
+#/lxphoton/gun/beamType    mono
 #/lxphoton/gun/beamType    source
 #/lxphoton/gun/setPosZ   0.0 m
-/lxphoton/gun/setPosition  0.0  0.0  0.0 m 
+#/lxphoton/gun/setPosition  0.0  0.0  0.0 m
 
-/gun/particle e-
+/lxphoton/gun/SpectraFile   cosmic_muon_spectrum.txt
+/lxphoton/gun/beamType    cosmic
+
+#/gun/particle e-
 #/gun/particle gamma
-/gun/energy 2.28 MeV
+#/gun/energy 2.28 MeV
 #/gun/energy 5.0 GeV
 /gun/direction 0 0 1
 

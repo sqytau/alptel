@@ -15,6 +15,8 @@
 #include "G4SystemOfUnits.hh"
 #include "PrimaryGeneratorAction.hh"
 
+#include "G4AnalysisManager.hh"
+
 
 TrackingAction::TrackingAction(DetectorConstruction* DET, EventAction* EA)
 :G4UserTrackingAction(),fDetector(DET), fEventAction(EA), fZstartAbs(0.0), fZendAbs(0.0), fZendMagnet(0.0),

@@ -169,7 +169,7 @@ void LxUG03::Construct()
       volsolid[csolid.first] = new G4SubtractionSolid(vsname, volsolid[solv1], volsolid[solv2], transform1);
     } else {
       G4String msgstr("Composit solid type ");
-      msgstr += G4String(soptype) + G4String(" is not supported! Ignore it\n");
+      msgstr += std::to_string(soptype) + G4String(" is not supported! Ignore it\n");
       G4Exception("LxUG03::", "Construct()", JustWarning, msgstr.c_str());
     }
   }

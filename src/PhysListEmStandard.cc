@@ -38,6 +38,7 @@
 #include "G4PhotoElectricEffect.hh"
 #include "G4RayleighScattering.hh"
 #include "G4KleinNishinaModel.hh"
+#include "G4LivermorePhotoElectricModel.hh"
 
 #include "G4eMultipleScattering.hh"
 #include "G4eIonisation.hh"
@@ -58,19 +59,34 @@
 #include "G4IonParametrisedLossModel.hh"
 #include "G4NuclearStopping.hh"
 
-#include "G4EmProcessOptions.hh"
+#include "G4EmParameters.hh"
 #include "G4MscStepLimitType.hh"
 
 #include "G4LossTableManager.hh"
 #include "G4UAtomicDeexcitation.hh"
 
+#include "G4BuilderType.hh"
 #include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PhysListEmStandard::PhysListEmStandard(const G4String& name)
    :  G4VPhysicsConstructor(name)
-{}
+{
+    G4EmParameters* param = G4EmParameters::Instance();
+    param->SetDefaults();
+    param->SetVerbose(0);
+    param->SetMinEnergy(10*eV);
+    param->SetMaxEnergy(10*TeV);
+    param->SetNumberOfBinsPerDecade(10);
+    param->SetStepFunction(0.1, 100*um);
+    param->SetStepFunctionMuHad(0.1, 50*um);
+    param->SetStepFunctionLightIons(0.1, 20*um);
+    param->SetStepFunctionIons(0.1, 1*um);    
+    param->SetMscStepLimitType(fUseDistanceToBoundary);
+    param->SetDeexcitationIgnoreCut(true);
+    SetPhysicsType(bElectromagnetic);
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -171,30 +187,9 @@ void PhysListEmStandard::ConstructProcess()
     }
   }
 
-  // Em options
-  //
-  // Main options and setting parameters are shown here.
-  // Several of them have default values.
-  //
-  G4EmProcessOptions emOptions;
-  
-  //physics tables
-  //
-  emOptions.SetMinEnergy(10*eV);        //default 100 eV   
-  emOptions.SetMaxEnergy(10*TeV);        //default 100 TeV 
-  emOptions.SetDEDXBinning(12*10);        //default=12*7
-  emOptions.SetLambdaBinning(12*10);        //default=12*7
-  
-  //multiple coulomb scattering
-  //
-  emOptions.SetMscStepLimitation(fUseSafetyPlus);  //default=fUseSafety
-    
   // Deexcitation
   //
   G4VAtomDeexcitation* de = new G4UAtomicDeexcitation();
-  de->SetFluo(true);
-  de->SetAuger(false);   
-  de->SetPIXE(false);  
   G4LossTableManager::Instance()->SetAtomDeexcitation(de);
 }
 

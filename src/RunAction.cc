@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <iomanip>
 #include <vector>
+#include <string>
+#include <sys/stat.h>
 
 #include "RunAction.hh"
 #include "DetectorConstruction.hh"
@@ -12,6 +14,7 @@
 #include "HistoManager.hh"
 #include "Run.hh"
 
+#include "G4AnalysisManager.hh"
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4UnitsTable.hh"
@@ -78,8 +81,9 @@ void RunAction::BeginOfRunAction(const G4Run*)
 
     G4int btype = fPrimary->GetBeamType();
       if (btype == PrimaryGeneratorAction::beamMC || btype == PrimaryGeneratorAction::beamMCh5) {
-      G4String fmcname = fPrimary->GetMCfile();
-      fRun->SetRunID(fmcname.hash());
+      std::string fmcname = fPrimary->GetMCfile();
+      std::hash<std::string> mcfhash;
+      fRun->SetRunID(mcfhash(fmcname));
     } else if (btype == PrimaryGeneratorAction::beamMono) {
         if (fExternalRunID > 0) fRun->SetRunID(fExternalRunID);
         else fRun->SetRunID(1);
@@ -134,7 +138,13 @@ void RunAction::BeginOfRunAction(const G4Run*)
   if (isMaster) {
     if (fDumpGeometry) {
       G4GDMLParser parser;
-      parser.Write("lxgeomdump.gdml", fDetector->GetphysiWorld(), true);
+      G4String fname("lxgeomdump.gdml");
+      struct stat finfo;
+      int i = 0;
+      while (stat(fname.c_str(), &finfo) == 0) {
+        fname = G4String("lxgeomdump_") + G4UIcommand::ConvertToString(i++) + G4String(".gdml");
+      }
+      parser.Write(fname, fDetector->GetphysiWorld());
     }
   }
 
@@ -225,11 +235,11 @@ void RunAction::AddSensitiveVolume (const G4String volumename)
   G4String  vname("");
   G4int     vid(-1), dsd(1), dl(0);
 
-  str_size  dpos, dpos0(0);
-  std::vector <str_size> vdelimpos;
-  volname.strip(G4String::both);
+  size_t  dpos, dpos0(0);
+  std::vector <size_t> vdelimpos;
+  G4StrUtil::strip(volname);
   do {
-    dpos = volname.index(delim, dpos0);
+    dpos = volname.find(delim, dpos0);
     if (dpos != std::string::npos) {
       vdelimpos.push_back(dpos);
       dpos0 = dpos + 1;
@@ -240,17 +250,23 @@ void RunAction::AddSensitiveVolume (const G4String volumename)
   G4String tmp;
   switch (vdelimpos.size()) {
     case 4 :
-      tmp = volname(vdelimpos[2]+1, vdelimpos[3]-vdelimpos[2]-1);
-      dl = G4UIcmdWithAnInteger::GetNewIntValue(tmp.strip(G4String::both));
+      tmp = volname.substr(vdelimpos[2]+1, vdelimpos[3]-vdelimpos[2]-1);
+      G4StrUtil::strip(tmp);
+      dl = G4UIcmdWithAnInteger::GetNewIntValue(tmp);
+      [[fallthrough]];
     case 3 :
-      tmp = volname(vdelimpos[1]+1, vdelimpos[2]-vdelimpos[1]-1);
-      dsd = G4UIcmdWithAnInteger::GetNewIntValue(tmp.strip(G4String::both));
+      tmp = volname.substr(vdelimpos[1]+1, vdelimpos[2]-vdelimpos[1]-1);
+      G4StrUtil::strip(tmp);
+      dsd = G4UIcmdWithAnInteger::GetNewIntValue(tmp);
+      [[fallthrough]];
     case 2 :
-      tmp = volname(vdelimpos[0]+1, vdelimpos[1]-vdelimpos[0]-1);
-      vid = G4UIcmdWithAnInteger::GetNewIntValue(tmp.strip(G4String::both));
+      tmp = volname.substr(vdelimpos[0]+1, vdelimpos[1]-vdelimpos[0]-1);
+      G4StrUtil::strip(tmp);
+      vid = G4UIcmdWithAnInteger::GetNewIntValue(tmp);
+      [[fallthrough]];
     case 1:
-      vname = volname(0, vdelimpos[0]);
-      vname.strip(G4String::trailing);
+      vname = volname.substr(0, vdelimpos[0]);
+      G4StrUtil::strip(vname);
       break;
     default :
       G4String msgstr("Warning: AddSensitiveVolume: Line ");
@@ -317,7 +333,6 @@ void RunAction::AddInterceptVolumeECut (const G4String volname, const G4double e
 void RunAction::SaveRunInfo()
 {
   if (!fPrimary) return;
-  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
   const G4ParticleGun *pgun = fPrimary->GetParticleGun();
 
   G4int btype = fPrimary->GetBeamType();
