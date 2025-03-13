@@ -44,9 +44,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      void SetAbsorberMaterial (G4String);
      void SetAbsorberThickness(G4double);
      void SetAbsorberSizeXY   (G4double);
-     void SetAbsorberType(G4String val);
-     void SetGammaBeamDumpLength(G4double val);
-     void SetGammaBeamDumpMaterial(G4String val);
 
      void SetAbsorberZpos(G4double);
 
@@ -80,15 +77,15 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      const G4MaterialCutsCouple* GetAbsorbMaterialCut()  const
                              {return fLogicAbsorber->GetMaterialCutsCouple();}
 
-     G4double GetMagnetZend() { return fMagnetZPos + fMagnetSizeZ/2.0; }
+//      G4double GetMagnetZend() { return fMagnetZPos + fMagnetSizeZ/2.0; }
 
      void AddSensorSegmentation(const G4String sname, const G4double xsize, const G4double ysize,
                                 const G4int nx,const G4int ny);
      const std::tuple<G4double, G4double, G4int, G4int> &GetSensorSegmentation(const G4String sname)
                                                                         { return fSensors.at(sname); }
-     void AddBFieldModel(const G4String magid, std::tuple<G4String, G4String, G4String, G4String> bdatmodel)
-                    {fBFieldModelsInfo[magid].push_back(bdatmodel); };
-     void DumpBFieldModel();
+//      void AddBFieldModel(const G4String magid, std::tuple<G4String, G4String, G4String, G4String> bdatmodel)
+//                     {fBFieldModelsInfo[magid].push_back(bdatmodel); };
+//      void DumpBFieldModel();
 
   private:
 
@@ -120,7 +117,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      DetectorMessenger* fDetectorMessenger;
      G4Cache<G4GlobalMagFieldMessenger*> fFieldMessenger;
 
-     G4double           fMagnetZPos, fMagnetSizeZ;
+//      G4double           fMagnetZPos, fMagnetSizeZ;
 
      G4UserLimits       *fStepLimit;
 
@@ -128,7 +125,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      std::map<G4String, std::tuple<G4double, G4double, G4int, G4int> > fSensors;
      std::map<G4String, LxDetector*>  fDetList;
 
-     LxTargetChamber   *fTargetChamber;
+//      LxTargetChamber   *fTargetChamber;
 
      std::map<G4String, std::vector<std::tuple<G4String, G4String, G4String, G4String> > > fBFieldModelsInfo;
 
@@ -138,31 +135,17 @@ class DetectorConstruction : public G4VUserDetectorConstruction
      void ComputeCalorParameters();
      G4VPhysicalVolume* ConstructCalorimeter();
 
-     void ConstructIP();
-     void ConstructIPChamber();
-     void ConstructDumpMagnet(const G4String magType = "FlashMagnet");
-     void ConstructBeamDump();
-     void ConstructShielding();
-     void ConstructBeamPipeToDump();
-     void ConstructBeamPipeToIP();
      void ConstructLuxeDetectors();
-     void ConstructGammaMagnet();
-     void ConstructBremsTarget();
-     void ConstructGammaTarget();
-     void ConstructIPMagnet(const G4String magType = "FlashMagnet");
-     void ConstructCleaningMagnet();
-     void ConstructMagnet(G4LogicalVolume *mfContainer, const G4ThreeVector mf);
-     void ConstructComptShielding();
-     void ConstructInfrastructure();
-     void ConstructWalls();
+//      void ConstructMagnet(G4LogicalVolume *mfContainer, const G4ThreeVector mf);
+//      void ConstructInfrastructure();
+//      void ConstructWalls();
 
-     void ConstructVacuumChamber();
      void AssignRegions();
 
-     LxBField* ComposeFieldObject(const G4String magid, const G4ThreeVector magpos);
-     FieldDistribution* CreateFieldDistribution(const G4String &fmodel, const G4String &params);
-     void ConfigureFieldManager(G4FieldManager *fieldMgr, G4MagneticField *mfield);
-     void AddFieldToLogVolumes(G4FieldManager* fieldMgr, const std::vector<G4String> vname);
+//      LxBField* ComposeFieldObject(const G4String magid, const G4ThreeVector magpos);
+//      FieldDistribution* CreateFieldDistribution(const G4String &fmodel, const G4String &params);
+//      void ConfigureFieldManager(G4FieldManager *fieldMgr, G4MagneticField *mfield);
+//      void AddFieldToLogVolumes(G4FieldManager* fieldMgr, const std::vector<G4String> vname);
 };
 
 

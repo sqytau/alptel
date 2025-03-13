@@ -68,7 +68,7 @@
 
 #include "PhysListQGSP_BERT_HP.hh"
 #include "G4HadronPhysicsQGSP_BERT_HP.hh"
-#include "OpticalPhysics.hh"
+// #include "OpticalPhysics.hh"
 #include "LXSetUp.hh"
 
 PhysListQGSP_BERT_HP::PhysListQGSP_BERT_HP(G4int ver)
@@ -104,9 +104,9 @@ PhysListQGSP_BERT_HP::PhysListQGSP_BERT_HP(G4int ver)
 
   LXSetUp *lxs = LXSetUp::Instance();
 
-  if(lxs->ScintCerenkovPhysics){
-     RegisterPhysics( new OpticalPhysics());
-      }
+//   if(lxs->ScintCerenkovPhysics){
+//      RegisterPhysics( new OpticalPhysics());
+//       }
 
 }
 

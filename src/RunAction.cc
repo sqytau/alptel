@@ -148,10 +148,6 @@ void RunAction::BeginOfRunAction(const G4Run*)
     }
   }
 
-  if (isMaster) {
-    fDetector->DumpBFieldModel();
-  }
-
   if (!isMaster) {
     SaveRunInfo();
     PrintRunInfo();

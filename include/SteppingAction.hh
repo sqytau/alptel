@@ -1,8 +1,6 @@
 //
 /// \brief Definition of the SteppingAction class
 //
-// $Id: SteppingAction.hh 73026 2013-08-15 09:12:46Z gcosmo $
-//
 
 #ifndef SteppingAction_h
 #define SteppingAction_h 1
@@ -32,7 +30,6 @@ class SteppingAction : public G4UserSteppingAction
    void ProcessInTracker(const G4Step* aStep, const G4String &dname, const G4int dettype,
                                       const G4int detdepth, const G4int layerdepthd);
    void ProcessPrimaryTrack(const G4Step* aStep);
-   void ProcessScintCerenkov(const G4Step* aStep);
 
   private:
     DetectorConstruction* fDetector;

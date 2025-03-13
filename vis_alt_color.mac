@@ -1,0 +1,46 @@
+
+#/control/alias vacuumVisibility false
+/control/alias vacuumVisibility true
+/control/alias containerVisibility false
+#/control/alias containerVisibility true
+/control/alias containerColor  "0.3  0.3  0.3  0.5"
+
+/vis/viewer/set/style surface
+
+#/vis/viewer/set/lightsThetaPhi 130 30 deg
+#/vis/viewer/set/lightsThetaPhi 45 120 deg
+/vis/viewer/set/lightsThetaPhi 60 120 deg
+
+# Logical volumes settings 
+############################
+
+/vis/geometry/set/visibility World 0 false
+
+/vis/geometry/set/colour     logicOPPPSensitive   0  0.9  0.9  0.3  0.9
+/vis/geometry/set/colour     logicOPPPSensor      0  0.9  0.8  0.2  0.9
+
+/vis/geometry/set/colour     logicAlCollimator       0  0.66 0.68 0.62 1.0
+/vis/geometry/set/colour     logicLeadCollimator     0  0.2  0.2  0.2  1.0
+/vis/geometry/set/colour     logicSrContainer        0  0.2  0.2  0.2  1.0
+/vis/geometry/set/colour     logicCollimator2        0  0.53 0.58 0.60 1.0
+/vis/geometry/set/colour     logicCarrierPCB         0  0.24 0.49 0.22 1.0
+/vis/geometry/set/colour     logicAlpideContainer    0  {containerColor}
+/vis/geometry/set/visibility logicAlpideContainer    0  {containerVisibility}
+
+/vis/geometry/set/colour     logicWoodSupport        0  0.98 0.97 0.11 1.0
+/vis/geometry/set/colour     logicFloor              0  0.36 0.60 0.85 1.0
+
+/vis/geometry/set/colour     logicSr90Container      0  {containerColor}
+/vis/geometry/set/visibility logicSr90Container      0  {containerVisibility}
+
+/vis/geometry/set/colour     logicSr90Source         0  0.94 0.41 0.08 1.0
+/vis/geometry/set/colour     logicSourceAlPlug       0  0.66 0.68 0.62 1.0
+/vis/geometry/set/colour     logicSrSupportRing      0  0.66 0.68 0.62 0.8
+
+/vis/geometry/set/colour     logicCountVolume        0  0.73 0.08 0.94 0.8
+
+/vis/geometry/set/colour     logicFrame              0  0.4  0.4  0.4  1.0
+/vis/geometry/set/colour     logicROPCB              0  0.35 0.55 0.32 1.0
+/vis/geometry/set/colour     logicFrameHolder        0  0.64 0.55 0.75 1.0
+/vis/geometry/set/colour     logicSupportPole        0  0.52 0.67 0.62 1.0
+/vis/geometry/set/colour     logicShieldingBoxBottom 0  0.61 0.64 0.44 1.0

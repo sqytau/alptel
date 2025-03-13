@@ -281,61 +281,6 @@ void HistoManager::Book()
     analysisManager->SetH2Activation(ih, false);
     G4cout << "2D histogram id: " << ih << G4endl; }
 
-    
-  if(lxs->ScintCerenkovPhysics){
-    analysisManager->CreateH1("h71", "Optical photons produced in Brem. Cerenkov Channels (Channel ID)", lxs->CerenkovChannels, 0, lxs->CerenkovChannels);
-    analysisManager->CreateH1("h72", "Optical photons produced in IP Cerenkov Channels (Channel ID)", lxs->CerenkovChannels, 0, lxs->CerenkovChannels);
-    analysisManager->CreateH1("h73", "Optical photons produced in gamma spectrometer e+ side Cerenkov Channels (Channel ID)", lxs->CerenkovChannels, 0, lxs->CerenkovChannels);
-    analysisManager->CreateH1("h74", "Optical photons produced in gamma spectrometer e- side Cerenkov Channels (Channel ID)", lxs->CerenkovChannels, 0, lxs->CerenkovChannels);
-  
-    analysisManager->CreateH1("h75", "Optical photons produced in Brem. Scintillator (mm)", 8000, -lxs->ScintX/2.*mm, lxs->ScintX/2.*mm);
-    analysisManager->CreateH1("h76", "Optical photons produced in IP Scintillator (mm)", 8000, -lxs->ScintX/2.*mm, lxs->ScintX/2.*mm);
-    analysisManager->CreateH1("h77", "Optical photons produced in gamma spectrometer e+ side Scintillator (mm)", 8000, -lxs->ComptonLysoX/2.*mm, lxs->ComptonLysoX/2.*mm);
-    analysisManager->CreateH1("h78", "Optical photons produced in gamma spectrometer e- side Scintillator (mm)", 8000, -lxs->ComptonLysoX/2.*mm, lxs->ComptonLysoX/2.*mm);
-    
-    analysisManager->CreateH1("h79", "Optical photons registered in Brem. Scintillator Cameras (Camera ID)", 2, 0, 2);
-    analysisManager->CreateH1("h80", "Optical photons registered in IP Scintillator Cameras (Camera ID)", 2, 0, 2);
-
-    // gamma spectrometer cameras do not exist yet
-
-    //    analysisManager->CreateH1("h81", "Optical photons registered in gamma spectrometer e+ side Scintillator Cameras", 2, 0, 2);
-    // analysisManager->CreateH1("h82", "Optical photons registered in gamma spectrometer e- side Scintillator Cameras", 2, 0, 2);
-
-    // for (int i= 71; i<83; i++){
-    //   analysisManager->SetH1Activation(ih, true);}
-
-    // H2D with mm^2 precision, 1-D histos have nominal 125 um pixel resolution. ROOT / G4 crashes (for me) for 8000 * 800 H2D histos. - John
-    
-    analysisManager->CreateH2("h2d13", "Optical photons produced in Brem. Scintillator (mm / mm)", 1000, -lxs->ScintX/2.*mm, lxs->ScintX/2.*mm, 100, -lxs->ScintY/2.*mm, lxs->ScintY/2.*mm);
-    analysisManager->CreateH2("h2d14", "Optical photons produced in IP Scintillator (mm / mm)", 1000, -lxs->ScintX/2.*mm, lxs->ScintX/2.*mm, 100, -lxs->ScintY/2.*mm, lxs->ScintY/2.*mm);
-    analysisManager->CreateH2("h2d15", "Optical photons produced in gamma spectrometer e+ side Scintillator (mm / mm)", 1000, -lxs->ComptonLysoX/2.*mm, lxs->ComptonLysoX/2.*mm, 50, -lxs->ComptonLysoY/2.*mm, lxs->ComptonLysoY/2.*mm);
-    analysisManager->CreateH2("h2d16", "Optical photons produced in gamma spectrometer e- side Scintillator (mm / mm)", 1000, -lxs->ComptonLysoX/2.*mm, lxs->ComptonLysoX/2.*mm, 100, -lxs->ComptonLysoY/2.*mm, lxs->ComptonLysoY/2.*mm);
-
-    
-    analysisManager->CreateH2("h2d17", "Optical photons produced in Brem. Cherenkov (mm / mm)", 1000, -lxs->CerenkovTotalBoxLength/2., lxs->CerenkovTotalBoxLength/2., 100, -lxs->CerenkovTotalBoxHeight/2., lxs->CerenkovTotalBoxHeight/2.);
-    analysisManager->CreateH2("h2d18", "Optical photons produced in IP Cherenkov (mm / mm)", 1000, -lxs->CerenkovTotalBoxLength/2., lxs->CerenkovTotalBoxLength/2., 100, -lxs->CerenkovTotalBoxHeight/2., lxs->CerenkovTotalBoxHeight/2.);
-    analysisManager->CreateH2("h2d19", "Optical photons produced in gamma spectrometer e+ side Cherenkov (mm / mm)", 1000, -lxs->CerenkovTotalBoxLength/2., lxs->CerenkovTotalBoxLength/2., 100, -lxs->CerenkovTotalBoxHeight/2., lxs->CerenkovTotalBoxHeight/2.);
-    analysisManager->CreateH2("h2d20", "Optical photons produced in gamma spectrometer e- side Cherenkov (mm / mm)", 1000, -lxs->CerenkovTotalBoxLength/2., lxs->CerenkovTotalBoxLength/2., 100, -lxs->CerenkovTotalBoxHeight/2., lxs->CerenkovTotalBoxHeight/2.);
-
-
-    analysisManager->CreateH2("h2d21", "Energy all non-scintillation particles in contact w// Brem. Scintillator (GeV / mm)", 1000, -lxs->ScintX/2.*mm, lxs->ScintX/2.*mm, 180, 0., 18.*GeV);
-    analysisManager->CreateH2("h2d22", "Energy all non-scintillation particles in contact w// IP Scintillator (GeV / mm)", 1000, -lxs->ScintX/2.*mm, lxs->ScintX/2.*mm, 180, 0., 18.*GeV);
-    analysisManager->CreateH2("h2d23", "Energy all non-scintillation particles in contact w// gamma spectrometer e+ side Scintillator (GeV / mm)", 1000, -lxs->ComptonLysoX/2.*mm, lxs->ComptonLysoX/2.*mm, 180, 0., 18.*GeV);
-    analysisManager->CreateH2("h2d24", "Energy all non-scintillation particles in contact w// gamma spectrometer e- side Scintillator (GeV / mm)", 1000, -lxs->ComptonLysoX/2.*mm, lxs->ComptonLysoX/2.*mm, 180, 0., 18.*GeV);
-    
-    analysisManager->CreateH2("h2d25", "Energy all non-Cherenkov particles in contact w// Brem. Cherenkov Detector (GeV / mm)", 1000, -lxs->ScintX/2.*mm, lxs->ScintX/2.*mm, 180, 0., 18.*GeV);
-    analysisManager->CreateH2("h2d26", "Energy all non-Cherenkov particles in contact w// IP Cherenkov Detector (GeV / mm)", 1000, -lxs->ScintX/2.*mm, lxs->ScintX/2.*mm, 180, 0., 18.*GeV);
-    analysisManager->CreateH2("h2d27", "Energy all non-Cherenkov particles in contact w// gamma spectrometer e+ side  Cherenkov Detector (GeV / mm)", 1000, -lxs->CerenkovTotalBoxLength/2.*mm, lxs->CerenkovTotalBoxLength/2.*mm,  180, 0., 18.*GeV);
-    analysisManager->CreateH2("h2d28", "Energy all non-Cherenkov particles in contact w// gamma spectrometer e- side Cherenkov Detector (GeV / mm)", 1000, -lxs->CerenkovTotalBoxLength/2.*mm, lxs->CerenkovTotalBoxLength/2.*mm,  180, 0., 18.*GeV);
-    
-    // for (int i= 13; i<17; i++){
-    //   analysisManager->SetH2Activation(ih, true);}
-
-    
-      }
-
-    
-
   // Creating ntuple
   //
   analysisManager->CreateNtuple("lxtsim", "Bremsstrahlung photons at IP");

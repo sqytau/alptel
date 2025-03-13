@@ -227,7 +227,7 @@ void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
   //z-vertex of charged secondaries
   //
   id = -1;
-  fZendMagnet = fDetector->GetMagnetZend();
+  fZendMagnet = 0.0;
   if (charged && vertex.z() > fZendMagnet) id = 51;
   if (neutral && vertex.z() > fZendMagnet) id = 52;
   if (id>=0) {

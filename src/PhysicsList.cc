@@ -44,7 +44,6 @@
 #include "G4ShortLivedConstructor.hh"
 
 #include "G4Electron.hh"
-#include "OpticalPhysics.hh"
 #include "LXSetUp.hh"
 
 
@@ -102,10 +101,6 @@ void PhysicsList::ConstructParticle()
 
     LXSetUp *lxs = LXSetUp::Instance();
 
-  if(lxs->ScintCerenkovPhysics){
-     G4VPhysicsConstructor* opticalPhysics = new OpticalPhysics();
-     opticalPhysics->ConstructParticle();}
-
 }
 
 
@@ -119,9 +114,9 @@ void PhysicsList::ConstructProcess()
 //   fMaxStepLimit->ConstructProcess();
       LXSetUp *lxs = LXSetUp::Instance();
 
-  if(lxs->ScintCerenkovPhysics){
-    G4VPhysicsConstructor* opticalPhysics = new OpticalPhysics();
-    opticalPhysics->ConstructProcess();}
+//   if(lxs->ScintCerenkovPhysics){
+//     G4VPhysicsConstructor* opticalPhysics = new OpticalPhysics();
+//     opticalPhysics->ConstructProcess();}
 
     
 }

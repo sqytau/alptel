@@ -8,7 +8,6 @@
 
 #include "G4VModularPhysicsList.hh"
 #include "globals.hh"
-#include "OpticalPhysics.hh"
 
 class G4VPhysicsConstructor;
 class PhysicsListMessenger;

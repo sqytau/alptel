@@ -18,43 +18,6 @@ class LxDetector
 };
 
 
-
-class LxDetectorOPPP: public LxDetector
-{
-  public:
-    LxDetectorOPPP(DetectorConstruction *detc = 0): LxDetector(detc) {};
-    virtual ~LxDetectorOPPP() {};
-    virtual void Construct();
-
-  protected:
-    void AddSegmentation();
-};
-
-
-class LxDetectorCompton: public LxDetector
-{
-  public:
-    LxDetectorCompton(DetectorConstruction *detc = 0): LxDetector(detc) {};
-    virtual ~LxDetectorCompton() {};
-    virtual void Construct();
-
-  protected:
-    void AddSegmentation();
-};
-
-class LxDetectorComptonFluka: public LxDetector
-{
-  public:
-    LxDetectorComptonFluka(DetectorConstruction *detc = 0): LxDetector(detc) {};
-    virtual ~LxDetectorComptonFluka() {};
-    virtual void Construct();
-
-  protected:
-    void AddSegmentation();
-    G4AssemblyVolume* ConstructSupportAssembly(G4double &sphight);
-};
-
-
 class WISDetectorTele: public LxDetector
 {
   public:
@@ -71,8 +34,6 @@ class WISDetectorTele: public LxDetector
     virtual void ConstructBottomSupport(G4LogicalVolume  *logicWorld);
     G4LogicalVolume* ConstructSr90Sourse();
 };
-
-
 
 
 class WISDetectorTeleFrame: public WISDetectorTele

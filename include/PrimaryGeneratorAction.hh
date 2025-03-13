@@ -72,7 +72,6 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
   protected:
 
-    G4double TestHitTarget(const std::vector <double> &pp, const double *vtx);
     void InitReader();
 
   private:

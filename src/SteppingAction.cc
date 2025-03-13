@@ -61,11 +61,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   LXSetUp *lxs = LXSetUp::Instance();
 
-  if (lxs->ScintCerenkovPhysics){  // && (aStep->GetTrack()->GetParticleDefinition()->GetParticleName() == "opticalphoton")){
-    ProcessScintCerenkov(aStep);
-    if (aStep->GetTrack()->GetParticleDefinition()->GetParticleName() == "opticalphoton"){return;}
-  }
-
 //   const G4NavigationHistory *tchistps = postStepPoint->GetTouchable()->GetHistory();
 //   const G4NavigationHistory *tchistpr = preStepPoint->GetTouchable()->GetHistory();
 //   G4int vdepthps = tchistps->GetDepth();
@@ -96,9 +91,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 //                   << "  " << aStep->GetTrack()->GetTrackID() << std::endl;
 
 #ifdef LX_FAST_SIM
-        if (volid.first=="BeamDumpAssembly" || volid.first=="Shielding" || volid.first=="GammaBeamDumpAssembly"
-             || volid.first.contains("HICSDumpAssembly") || volid.first.contains("HICSDump2T")
-             || volid.first.contains("ComptShieldingConcrete") || volid.first.contains("ComptShieldingPlate")
+        if (volid.first=="BeamDumpAssembly"
             ) {
           aStep->GetTrack()->SetTrackStatus(fStopAndKill);
           break;
@@ -338,118 +331,4 @@ void SteppingAction::ProcessPrimaryTrack(const G4Step* aStep)
                     edep, ptype*1000 + psubtype, nsecondaries),
                     std::make_tuple(trcktype, pdgid, ptrackid) );
 }
-
-
-void SteppingAction::ProcessScintCerenkov(const G4Step* aStep)
-{ 
-  if(!aStep->IsFirstStepInVolume()){return;}
-
-  // G4cout << "First step in IP lanex or Cerenkov: " << (theTouchable->GetVolume()->GetName() << G4endl;
-
-      LXSetUp *lxs = LXSetUp::Instance();
-
- G4TouchableHandle theTouchable = aStep->GetPreStepPoint()->GetTouchableHandle();
-
- //G4cout << "First step in lanex: " << theTouchable->GetVolume()->GetName() << G4endl;
-							
- G4int dettype =-1; //0 for cherenkov channel, 1 for scint screen, 2 for scint. camera
- if (G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "CerenkovStrawInnerPhysical")) // && (aStep->GetTrack()->GetCurrentStepNumber()==1))
-   {dettype=0;}
- else if ((G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "scintPhosphorPhysical") ||  G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "LysoCal"))) //&& (aStep->GetTrack()->GetCurrentStepNumber()==1))
-   {dettype=1;}
- else if (G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "ScintCameraApertureInnerPhysical"))
-   {dettype=2;}
- else {return;}
-
-
-  //  G4cout << "Step in IP lanex or Cerenkov" << G4endl;
-
- G4ThreeVector globalHitPos = aStep->GetPreStepPoint()->GetPosition();
- G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
- G4int CopyNo, MotherCopyNo, DetectorCopyNo;
- G4ThreeVector local;;
- // For Cherenkov inner refractive medium volume -> Straw -> Detector
- if (dettype==0){
-   CopyNo = theTouchable->GetCopyNumber();
-   theTouchable->MoveUpHistory();
-   MotherCopyNo = theTouchable->GetCopyNumber(); 
-
-   theTouchable->MoveUpHistory();
-   theTouchable->MoveUpHistory();
-local = theTouchable->GetHistory()->GetTopTransform().TransformPoint(globalHitPos);
-   DetectorCopyNo = theTouchable->GetCopyNumber();}
- 
- else if  (dettype==1){
-
-   local = theTouchable->GetHistory()->GetTopTransform().TransformPoint(globalHitPos);
-
-   if(G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "LysoCal")){DetectorCopyNo = theTouchable->GetCopyNumber() + 2;}
-   else {
-   theTouchable->MoveUpHistory();
-   if (G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "Brem")){DetectorCopyNo=0;}
-   theTouchable->MoveUpHistory();
-   if (G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "HICS")){DetectorCopyNo=1;}
-   }
- }
- else if  (dettype==2){
-
-   theTouchable->MoveUpHistory();
-      MotherCopyNo = theTouchable->GetCopyNumber();  
-
-   if (G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "Brem")){DetectorCopyNo=0;}
-   if (G4StrUtil::contains(theTouchable->GetVolume()->GetName(), "HICS")){DetectorCopyNo=1; MotherCopyNo -= 2;}
- }
-
-
-   // cherenkov det copy 0 = brem, 1 = hics ip, 2 & 3 = gamma spectrometer
-
- G4double evweight = 1.0;
- const EventInfo *evinf = dynamic_cast<EventInfo*>(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
- if (evinf){ evweight = evinf->GetWeight();
-   //   normalising for event weight
- }
-
-  if(aStep->GetTrack()->GetParticleDefinition()->GetParticleName() == "opticalphoton"){
-    if(aStep->GetTrack()->GetCurrentStepNumber()==1){
- if( dettype == 0){ // cherenkov
-   G4int norm_mcn;
-   if (MotherCopyNo<lxs->CerenkovChannels/lxs->CerenkovChannelLayers){norm_mcn = lxs->CerenkovChannelLayers*MotherCopyNo+3;} 
-   else if (MotherCopyNo>(lxs->CerenkovChannels/lxs->CerenkovChannelLayers - 1) && MotherCopyNo<2*(lxs->CerenkovChannels/lxs->CerenkovChannelLayers)){norm_mcn =lxs->CerenkovChannelLayers *(MotherCopyNo-lxs->CerenkovChannels/lxs->CerenkovChannelLayers) + 2;} 
-   else if (MotherCopyNo>2*(lxs->CerenkovChannels/lxs->CerenkovChannelLayers)-1 && MotherCopyNo<3*(lxs->CerenkovChannels/lxs->CerenkovChannelLayers)){norm_mcn = lxs->CerenkovChannelLayers*(MotherCopyNo-2*(lxs->CerenkovChannels/lxs->CerenkovChannelLayers)) + 1;} 
-   else if (MotherCopyNo>3*(lxs->CerenkovChannels/lxs->CerenkovChannelLayers)-1 && MotherCopyNo<4*(lxs->CerenkovChannels/lxs->CerenkovChannelLayers)){norm_mcn = lxs->CerenkovChannelLayers*(MotherCopyNo-3*(lxs->CerenkovChannels/lxs->CerenkovChannelLayers));} 
-
-     analysisManager->FillH1(71+DetectorCopyNo, norm_mcn, evweight);
-     //     G4cout << "cherenkov emission! " << local.x() << ", " << local.y() << G4endl;
-     analysisManager->FillH2(17+DetectorCopyNo, local.x(), local.y(), evweight);
-
- }
- 
- if( dettype == 1){ // scintillator
-   if (abs(local.y())<5.0){  // selecting only central band =/- 5mm
-      analysisManager->FillH1(75+DetectorCopyNo, local.x(), evweight/(lxs->ScintPhysicsYield));}
-      analysisManager->FillH2(13+DetectorCopyNo, local.x(), local.y(), evweight/(lxs->ScintPhysicsYield));
- }}
- if( dettype == 2){ // camera
-   analysisManager->FillH1(79+DetectorCopyNo, MotherCopyNo, evweight/(lxs->ScintPhysicsYield));}
-  }
-
-  
-  else{      // for normal particles (non-optical photons)
-
-    G4double E = aStep->GetTrack()->GetDynamicParticle()->GetTotalEnergy();
-
-    if( dettype == 0){ // cherenkov
-
-    analysisManager->FillH2(25+DetectorCopyNo, local.x(), E, evweight);}
-
- if( dettype == 1){ // scintillator
-
-   if (abs(local.y())<5.0){  // selecting only central band =/- 5mm
-     analysisManager->FillH2(21+DetectorCopyNo, local.x(), E, evweight);}
- }
-
-  }
-
-}
- 
 

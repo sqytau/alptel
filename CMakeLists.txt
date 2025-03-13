@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------------
 # Setup the project
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
-project(lxbeamsim)
+project(alptelsim)
 
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -51,9 +51,9 @@ endif()
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(lxbeamsim lxbeamsim.cc ${sources} ${headers} ${TOOLS_FORTRAN_OBJECTS})
-target_link_libraries(lxbeamsim ${Geant4_LIBRARIES} ${HBOOK_LIBRARIES} ${HDF5_LIBRARIES})
+add_executable(alptelsim alptelsim.cc ${sources} ${headers} ${TOOLS_FORTRAN_OBJECTS})
+target_link_libraries(alptelsim ${Geant4_LIBRARIES} ${HBOOK_LIBRARIES} ${HDF5_LIBRARIES})
 
-#target_compile_options(lxbeamsim PUBLIC -ggdb -g)
+#target_compile_options(alptelsim PUBLIC -ggdb -g)
 #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ggdb -g")
 

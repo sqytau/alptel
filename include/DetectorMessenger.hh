@@ -42,12 +42,6 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithADoubleAndUnit* fWorldZCmd;
     G4UIcmdWithADoubleAndUnit* fWorldXYCmd;
 
-    G4UIcmdWithAString*        fAbsTypeCmd;
-
-    G4UIdirectory*  fDetBFieldDir;
-    G4UIcommand*    fSetBFieldValue;
-    G4UIcommand*    fSetBFieldDistrib;
-
 };
 
 #endif

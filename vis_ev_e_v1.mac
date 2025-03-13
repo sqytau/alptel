@@ -8,11 +8,6 @@
 /run/setCut 10 um
 #/lxphoton/phys/addPhysics  emstandard_opt0
 
-#/lxphoton/det/GammaBeamDumpZ   1000.0  mm
-#/lxphoton/det/GammaBeamDumpMaterial Copper
-
-/control/execute lxmagnet_hics.mac
-
 /run/initialize
 
 #
@@ -71,7 +66,7 @@
 #/vis/viewer/set/viewpointThetaPhi 210 150
 
 # Draw geometry in surface mode with colors settings
-/control/execute vis_lx_color.mac
+/control/execute vis_alt_color.mac
 #/control/execute vis_grid.mac
 
 #

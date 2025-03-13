@@ -459,7 +459,6 @@ void PrimaryGeneratorAction::GeneratefromMC(G4Event* anEvent)
   if (    (!fselectpdg && (pid != 90))
        || (fselectpdg && std::find(fselectpdgvec.begin(), fselectpdgvec.end(), pid) != fselectpdgvec.end()) ) {
     if (true) {
-//    if (TestHitTarget(pp, vtx) < 1.2) {
       fParticleGun->SetNumberOfParticles(1);
       fnfixparticles -= 1;
 //       std::cout << "Generating " << fnfixparticles+1 << " particles (weight " << wghtf
@@ -474,7 +473,6 @@ void PrimaryGeneratorAction::GeneratefromMC(G4Event* anEvent)
     }
 //     std::for_each(pdata.begin(), pdata.end(), [](const double x){std::cout << x << "  ";});
 //     std::cout << std::endl;
-//     std::cout << "TestHitTarget: " << TestHitTarget(pp, vtx) << std::endl;
   } else {
     fParticleGun->SetNumberOfParticles(0);
     fnfixparticles = 0;
@@ -482,16 +480,6 @@ void PrimaryGeneratorAction::GeneratefromMC(G4Event* anEvent)
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
   anEvent->SetUserInformation(new EventInfo(fMCEventInfo->GetWeight(), fMCEventInfo->GetMCTrackId()));
-}
-
-
-
-G4double PrimaryGeneratorAction::TestHitTarget(const std::vector <double> &pp, const double *vtx)
-{
-   G4ThreeVector pv = G4ThreeVector(pp[0], pp[1], pp[2]);
-   G4ThreeVector rv = G4ThreeVector(vtx[0], vtx[1], vtx[2]);
-   G4ThreeVector rt = rv + pv.unit() * (LXSetUp::Instance()->GTargetZpos - vtx[2]);
-   return std::fabs(2.0*rt.x()/LXSetUp::Instance()->GTargetX);
 }
 
 

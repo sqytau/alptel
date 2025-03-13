@@ -762,38 +762,5 @@ void LxNTupleReader::FillOutput(std::vector < std::vector <double> > &ptcls, con
 
 G4int LxNTupleReader::Transform(G4ThreeVector &rr, G4ThreeVector &pp)
 {
-  G4ThreeVector dir(-1.0*pp.unit());
-  G4ThreeVector ppos(rr);
-  LXSetUp *lxs = LXSetUp::Instance();
-  G4double rmax = lxs->HICSDumpR;
-  G4double dz = lxs->HICSDumpZ;
-  G4double distToDump = 100.0 *mm;
-
-  if (!fDumpSolid) fDumpSolid = new G4Tubs ("AuxTransforSolid", 0.0, rmax, dz/2.0, 0.0, 2.0*M_PI);
-
-  // move position 10cm in front of the beam dump (solid cylinder in its ref. frame), this is where the particles are generated
-  ppos.setZ(-dz/2.0 - distToDump);
-
-//   G4cout << "ppos: " << ppos.x() << "  " << ppos.y() << "  " << ppos.z()
-//          << "  dir: " << dir.x() << "  " << dir.y() << "  " << dir.z() << G4endl;
-  G4double ld = fDumpSolid->DistanceToIn(ppos, dir);
-//   G4cout << "Distance: " << ld << G4endl;
-//   {G4ThreeVector pspos = ppos + dir * ld;
-//   G4cout << "pspos: " << pspos.x() << "  " << pspos.y() << "  " << pspos.z() << G4endl;}
-
-  G4ThreeVector pspos(ppos);
-  if (ld != kInfinity) {
-    pspos += dir * ld;
-  } else {
-    G4String msgstr("Transformation of primary particle failed! Using initial position.\n");
-    G4Exception("LxNTupleReader::", "Transform()", JustWarning, msgstr.c_str());
-  }
-
-//   G4cout << "pspos: " << pspos.x() << "  " << pspos.y() << "  " << pspos.z() << G4endl;
-  G4double alf = atan2(lxs->HICSDumpFrontXPos, lxs->HICSDumpFrontZPos - lxs->IPMagnetZpos);
-  pspos.setZ(pspos.z() + dz/2.0 + lxs->HICSDumpFrontZPos/cos(alf));
-  rr = pspos.rotateY(-alf);
-  pp.rotateY(-alf);
-
   return 0;
 }
