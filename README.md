@@ -12,7 +12,7 @@ make
 ./alptelsim telescope_sim.mac 1
 ```
 This will simulate 5k cosmic muons, parameter 1 means 1 thread.
-It is build in multithreading mode but not tested...
+It is built in multithreading mode but not tested...
 
 Runnig it without parameters will open Qt GUI, of course, if Qt is installed and Geat4 link with it.
 ```
