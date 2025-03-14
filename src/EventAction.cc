@@ -236,8 +236,8 @@ void  EventAction::UpdateOPPPTracker()
     histManager->SetHitTrackPosition(fHitTrackGPos[hitId]);
     histManager->SetHitTrackTime(fHitTrackGTime[hitId]);
     std::vector<G4double> tredep(fHitTrackEDep[hitId].size());
-    std::transform(fHitTrackEDep[hitId].begin(), fHitTrackEDep[hitId].end(), tredep.begin(), 
-                                                        std::bind2nd(std::divides<double>(), GeV));
+    std::transform(fHitTrackEDep[hitId].begin(), fHitTrackEDep[hitId].end(), tredep.begin(),
+                                                        std::bind(std::divides<double>(), std::placeholders::_1, GeV));
     histManager->SetHitTrackEDep(tredep);
     analysisManager->FillNtupleDColumn(2, 13, evweght);
     analysisManager->FillNtupleIColumn(2, 14, run->GetRunID());
@@ -266,11 +266,11 @@ void EventAction::UpdateVolumeTracks()
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
   Run* run = static_cast<Run*>(G4RunManager::GetRunManager()->GetNonConstCurrentRun());
   HistoManager *histManager = run->GetHistoManager();
-  
+
   G4double evweght = 1.0;
   const EventInfo *evinf = dynamic_cast<EventInfo*>(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
   if (evinf) evweght = evinf->GetWeight();
-  
+
 //   std::cout << "End of event. Updating volume tracks tree: \n";
   histManager->SetVolumeTracks(fVolumeTracks);
   analysisManager->FillNtupleIColumn(1, 0, run->GetNumberOfEvent() + run->GetSkipEvents());

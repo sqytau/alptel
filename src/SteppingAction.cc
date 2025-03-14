@@ -45,7 +45,7 @@ SteppingAction::~SteppingAction()
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
   G4StepPoint *preStepPoint = aStep->GetPreStepPoint();
-  if (preStepPoint->GetTouchableHandle()->GetVolume() == fDetector->GetAbsorber()) ProcessInAbsorber(aStep);
+//   if (preStepPoint->GetTouchableHandle()->GetVolume() == fDetector->GetAbsorber()) ProcessInAbsorber(aStep);
 
   G4StepPoint *postStepPoint = aStep->GetPostStepPoint();
   if (!postStepPoint->GetTouchableHandle()->GetVolume()) {
@@ -75,7 +75,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   const auto &intercetvolmap = run->GetInterceptVolumes();
 
   for (const auto &volid : intercetvolmap) {
-    //Check the particle enters OpppDetContainer
+    //Check the particle enters the volume for intercepting the particle state
     G4int vdps = CheckPointHistory(postStepPoint, volid.first);
     if (vdps) {
       G4int vdpr = CheckPointHistory(preStepPoint, volid.first);

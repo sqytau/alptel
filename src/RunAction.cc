@@ -79,17 +79,19 @@ void RunAction::BeginOfRunAction(const G4Run*)
     fRun->SetPrimary(particle, energy);
     fRun->SetSkipEvents(fPrimary->GetSkipEvents());
 
-    G4int btype = fPrimary->GetBeamType();
+    if (fExternalRunID >= 0) {
+      fRun->SetRunID(fExternalRunID);
+    } else {
+      G4int btype = fPrimary->GetBeamType();
       if (btype == PrimaryGeneratorAction::beamMC || btype == PrimaryGeneratorAction::beamMCh5) {
-      std::string fmcname = fPrimary->GetMCfile();
-      std::hash<std::string> mcfhash;
-      fRun->SetRunID(mcfhash(fmcname));
-    } else if (btype == PrimaryGeneratorAction::beamMono) {
-        if (fExternalRunID > 0) fRun->SetRunID(fExternalRunID);
-        else fRun->SetRunID(1);
-    } else if (btype == PrimaryGeneratorAction::beamGauss) {
-        if (fExternalRunID > 0) fRun->SetRunID(fExternalRunID);
-        else fRun->SetRunID(2);
+        std::string fmcname = fPrimary->GetMCfile();
+        std::hash<std::string> mcfhash;
+        fRun->SetRunID(mcfhash(fmcname));
+      } else if (btype == PrimaryGeneratorAction::beamMono) {
+        fRun->SetRunID(1);
+      } else if (btype == PrimaryGeneratorAction::beamGauss) {
+        fRun->SetRunID(2);
+      }
     }
   }
   
