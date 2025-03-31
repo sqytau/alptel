@@ -24,7 +24,7 @@ HistoManager::HistoManager()
 
 HistoManager::~HistoManager()
 {
-  delete G4AnalysisManager::Instance();
+//  delete G4AnalysisManager::Instance();
   delete fHMessanger;
 }
 

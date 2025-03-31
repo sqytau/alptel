@@ -571,7 +571,7 @@ int LxHDF5Reader::DumpData(const hsize_t start, const hsize_t count)
     epdspace.close();
     epdset.close();
 
-    delete x;
+    delete [] x;
 
   }
   catch( H5::FileIException &error ) {
