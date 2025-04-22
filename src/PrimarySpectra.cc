@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <vector>
 #include <stdexcept>
+#include <functional>
 
 #include "Randomize.hh"
 
@@ -94,7 +95,7 @@ double PrimarySpectra::GetRandom()
 //   double x = gRandom->Uniform(1.0);
   double x = G4RandFlat::shoot();
   
-  auto itr = std::find_if( vfc.begin(), vfc.end(), std::bind(std::less_equal<double>(), std::placeholders::_1, x) );
+  auto itr = std::find_if( vfc.begin(), vfc.end(), std::bind(std::less_equal<double>(), x, std::placeholders::_1) );
   if (itr == vfc.begin())  return vx.front();
   if (itr == vfc.end()  )  return vx.back();
 
