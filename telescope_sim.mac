@@ -1,6 +1,6 @@
 # $Id: wis_tele3_settings.mac 2023-01-19 sqy $
 #
-# macro file for lxbeamsim.cc 
+# macro file for lxbeamsim.cc
 #
 /control/verbose 2
 /run/verbose 2
@@ -93,8 +93,8 @@
 /lxphoton/gun/SpectraFile   cosmic_muon_spectrum.txt
 #/lxphoton/gun/SpectraFile   spectra_test_compt.txt
 
-/gun/particle    e-
-/gun/energy      2.28 MeV
+/gun/particle    mu-
+#/gun/energy      2.28 MeV
 
 #
 # TTree output
@@ -111,7 +111,7 @@
 
 
 
-/analysis/setFileName    wis_tele3_mono_e223mev.root
+/analysis/setFileName    wis_tele3_cosmic_mu.root
 
 # Histograms settings and activation, some of them are adjusted in RunAction::BeginOfRunAction
 ############################################
@@ -125,4 +125,3 @@
 #/run/beamOn 6250000
 /run/beamOn 5000
 ####################################
-
